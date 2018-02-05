@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- loadImage="GetImage"-->
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui" loadImage="OnGetImage" onLoad="Ribbon_Load">
+  <ribbon startFromScratch="false">
+    <tabs>
+      <tab idMso="TabSlideShow">
+        <group idMso="GroupFont" visible="false" />
+        <group id="WiimotePP_group" label="Wii Remote" getImage="ReturnImage">
+          <button id="ButtonA12" label="Show Stage Display" size="large" getImage="ReturnImage" keytip="W1" supertip="Manage wii remote control settings" onAction="showWiimoteSetup"/>
+          <button id="ButtonFreeze" label="Freeze Projector" size="large" getImage="ReturnImageFreeze" keytip="WF" supertip="Freeze projector display" onAction="showFreeze"/>
+          <toggleButton id="toggleButton" label="Show Stage Display" size="large" getImage="ReturnImage" onAction="showWiimoteSetup" getPressed ="get_Pressed"/>
+            <box id="wiimotePC_settingsBox" boxStyle="vertical">
+            <button id="wmPC_connect" label="Connect" imageMso="BlogPublish" keytip="WC" supertip="Connect new Wiimote(s) to the PC" onAction="LaunchAddWiimotes" getEnabled="GetEnabled"/>
+            <button id="wmPC_disconnect" label="Disconnect All" imageMso="InkDeleteAllInk" keytip="WD" supertip="Disconnect and remove all connected (paired) wiimotes" onAction="LaunchRemoveAllWiimotes" getEnabled="GetEnabled" />
+          </box>
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>
+

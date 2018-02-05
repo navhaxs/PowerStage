@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+    <Fragment>
+        <DirectoryRef Id="TARGETDIR">
+            <Directory Id="dirv8IbTDa_kbdpOJJeXPlDBW0NUbI" Name="Debug" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dirv8IbTDa_kbdpOJJeXPlDBW0NUbI">
+            <Component Id="cmpxLABS9FxBxGp_aE8iXN9g.ddfTQ" Guid="PUT-GUID-HERE">
+                <File Id="filNg2875EJAXTUQUuy9RDnTAepnXc" KeyPath="yes" Source="SourceDir\Debug\WiimoteAddin.dll" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+</Wix>
