@@ -10,7 +10,6 @@ using NetOffice.OfficeApi.Enums;
 using PowerPoint = NetOffice.PowerPointApi;
 using NetOffice.PowerPointApi.Enums;
 using System.Diagnostics;
-using static PowerStageAddin.Win32;
 using PowerStageAddin;
 using System.Windows.Forms.Integration;
 
@@ -30,7 +29,7 @@ namespace TestApp
             //DONT USE:
             //testAddinForm();
             {
-                var wpfwindow = new PowerStage.OverlayWindow();
+                var wpfwindow = new PowerStage.ToolbarWindow();
                 ElementHost.EnableModelessKeyboardInterop(wpfwindow);
                 wpfwindow.Show();
             }
@@ -52,46 +51,6 @@ namespace TestApp
         {
         }
 
-        static public void testAPI()
-        {
-            // detect presenter view screen
-            // draw overlay form on presenter view screen
-            // detect powerpoint slideshow screen
-            // set up WM_PAINT listener
-            // find 3rd free display
-            // show form on 3rd display
-
-            //PowerPoint.Application powerApplication = new PowerPoint.Application();
-            //// add a new presentation with one new slide
-            //PowerPoint.Presentation presentation = powerApplication.Presentations.Add(MsoTriState.msoTrue);
-            //presentation.Slides.Add(1, PpSlideLayout.ppLayoutClipArtAndVerticalText);
-
-
-
-
-            Process[] processes = Process.GetProcessesByName("powerpnt");
-            Process lol = processes[0];
-            IntPtr ptr = lol.MainWindowHandle;
-            Rect NotepadRect = new Rect();
-            GetWindowRect(ptr, ref NotepadRect);
-
-            IntPtr hWnd = IntPtr.Zero;
-            foreach (Process pList in Process.GetProcesses())
-            {
-                //if (pList.MainWindowTitle.EndsWith(" - PowerPoint Presenter View"))
-                //{
-                //    hWnd = pList.MainWindowHandle;
-                //}
-                if (pList.MainWindowTitle.StartsWith("PowerPoint SlideShow  -  "))
-                {
-                    hWnd = pList.MainWindowHandle;
-                }
-            }
-            GetWindowRect(hWnd, ref NotepadRect);
-            //return hWnd; //Should contain the handle but may be zero if the title doesn't match
-
-        }
-
-
+   
     }
 }

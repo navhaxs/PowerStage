@@ -7,6 +7,8 @@ using System.Windows.Media;
 
 namespace PowerStage.Models
 {
+
+    /* Stage display */
     public class ThumbnailUpdateMessage
     {
         public ImageSource CurrentSlideImage { get; set; }
@@ -32,4 +34,21 @@ namespace PowerStage.Models
         public string SlideText { get; set; }
         public string SlideTitle { get; set; }
     }
+
+    /* Overlay ("Fade to Logo"/"Freeze") */
+    public struct OverlayMessage
+    {
+        public OverlayMode mode { get; set; }
+
+        public enum OverlayMode
+        {
+            FadeToBlack = 0,
+            FadeToLogo = 1,
+            CutToFreeze = 2,
+            FadeToClear = 3,
+            CutToClear = 4
+        }
+
+    }
+
 }

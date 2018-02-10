@@ -12,7 +12,7 @@ using System.Windows;
 using GalaSoft.MvvmLight.Messaging;
 using System.Windows.Media.Imaging;
 using PowerStage.Models;
-using PowerStage.Models;
+
 namespace PowerStageAddin
 {
     public class PowerPointApi

@@ -8,12 +8,12 @@ namespace PowerStageAddin
 {
     class WiimoteMapping : ApplicationSettingsBase
     {
-        private string displayName;  // TODO button mapping here
-        [UserScopedSetting()]
-        [SettingsSerializeAs(System.Configuration.SettingsSerializeAs.Xml)]
-        public string DisplayName
-        {
-            get { return displayName; }
-        }
+        //private string displayName;  // TODO button mapping here
+        //[UserScopedSetting()]
+        //[SettingsSerializeAs(System.Configuration.SettingsSerializeAs.Xml)]
+        //public string DisplayName
+        //{
+        //    get { return displayName; }
+        //}
     }
 }

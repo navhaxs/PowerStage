@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using PowerStage.Models;
+using PowerStageAddin;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static PowerStageAddin.Win32;
 
 namespace TestApp
 {
@@ -19,16 +19,65 @@ namespace TestApp
         public Form1()
         {
             InitializeComponent();
+        }
 
-            var s = PowerStageAddin.MyEnumWindows.GetWindowTitles(true);
-            if (s.Count > 0)
+        private bool mouseIsDown = false;
+        private Point firstPoint;
+
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            firstPoint = e.Location;
+            mouseIsDown = true;
+        }
+
+        private void Form1_MouseUp(object sender, MouseEventArgs e)
+        {
+            mouseIsDown = false;
+        }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (mouseIsDown)
             {
-                hnd = s[0];
-            } else
-            {
-                hnd = IntPtr.Zero;
+                // Get the difference between the two points
+                int xDiff = firstPoint.X - e.Location.X;
+                int yDiff = firstPoint.Y - e.Location.Y;
+
+                // Set the new point
+                int x = this.Location.X - xDiff;
+                int y = this.Location.Y - yDiff;
+                this.Location = new Point(x, y);
             }
-
+        }
+        protected override void WndProc(ref Message m)
+        {
+            const int wmNcHitTest = 0x84;
+            const int htBottomLeft = 16;
+            const int htBottomRight = 17;
+            if (m.Msg == wmNcHitTest)
+            {
+                int x = (int)(m.LParam.ToInt64() & 0xFFFF);
+                int y = (int)((m.LParam.ToInt64() & 0xFFFF0000) >> 16);
+                Point pt = PointToClient(new Point(x, y));
+                Size clientSize = ClientSize;
+                if (pt.X >= clientSize.Width - 16 && pt.Y >= clientSize.Height - 16 && clientSize.Height >= 16)
+                {
+                    m.Result = (IntPtr)(IsMirrored ? htBottomLeft : htBottomRight);
+                    return;
+                }
+            }
+            base.WndProc(ref m);
+        }
+        
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                const int CS_DROPSHADOW = 0x20000;
+                CreateParams cp = base.CreateParams;
+                cp.ClassStyle |= CS_DROPSHADOW;
+                return cp;
+            }
         }
         private Bitmap Screenshot()
         {
@@ -42,13 +91,18 @@ namespace TestApp
             return bmpScreenshot;
         }
 
-        IntPtr hnd;
-
-
-        private Bitmap ScreenshotPPt()
-        {
-
-            return PrintWindow(hnd);
+        //private Bitmap ScreenshotPPt()
+        //{
+        //    var s = PowerStage.PlatformInvokeUSER32.GetWindowTitles(true);
+        //    if (s.Count > 0)
+        //    {
+        //        hnd = s[0];
+        //    }
+        //    else
+        //    {
+        //        hnd = IntPtr.Zero;
+        //    }
+        //    return PowerStage.CaptureScreen.GetWindowImage(hnd);
 
             //Rect NotepadRect = new Rect();
             //IntPtr hWnd = IntPtr.Zero;
@@ -67,40 +121,39 @@ namespace TestApp
             //GetWindowRect(s[0], ref NotepadRect);
 
 
-            Screen targetScreen = Screen.FromHandle(hnd);
+        //    Screen targetScreen = Screen.FromHandle(hnd);
 
-            if (targetScreen.WorkingArea.Width == 0 || targetScreen.WorkingArea.Height == 0)
-                return new Bitmap(1,1);
+        //    if (targetScreen.WorkingArea.Width == 0 || targetScreen.WorkingArea.Height == 0)
+        //        return new Bitmap(1,1);
 
-            Bitmap bmpScreenshot = new Bitmap(targetScreen.WorkingArea.Width, targetScreen.WorkingArea.Height);
+        //    Bitmap bmpScreenshot = new Bitmap(targetScreen.WorkingArea.Width, targetScreen.WorkingArea.Height);
             
-            Graphics g = Graphics.FromImage(bmpScreenshot);
+        //    Graphics g = Graphics.FromImage(bmpScreenshot);
 
-            // assumes top-most...
-            g.CopyFromScreen(targetScreen.WorkingArea.Left, targetScreen.WorkingArea.Top, 0, 0, targetScreen.WorkingArea.Size);
-
-
+        //    // assumes top-most...
+        //    g.CopyFromScreen(targetScreen.WorkingArea.Left, targetScreen.WorkingArea.Top, 0, 0, targetScreen.WorkingArea.Size);
 
 
-            return bmpScreenshot;
-        }
+
+
+        //    return bmpScreenshot;
+        //}
 
         private void button1_Click(object sender, EventArgs e)
         {
-            pictureBox1.Image = ScreenshotPPt();
+            pictureBox1.Image = PowerStage.CaptureScreen.GetScreenshot(); // CaptureScreen.CaptureScreen.GetDesktopImage();
 
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            pictureBox1.Image = ScreenshotPPt();
+            //pictureBox1.Image = ScreenshotPPt();
 
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            PowerStageAddin.Overlay s = new PowerStageAddin.Overlay();
-            s.Show();
+
         }
 
         private int test = 0;

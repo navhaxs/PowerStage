@@ -22,16 +22,8 @@ namespace PowerStageAddin.ui
             IntPtr matchedHandle;
             string matchedTitle;
             FindWindowTitleMatch(matchPattern, out matchedHandle, out matchedTitle);
-            Bitmap screenshot = GetScreenshot(matchedHandle);
+            Bitmap screenshot = PowerStage.CaptureScreen.GetScreenshot();
             pictureBox1.Image = screenshot;
-
-            // test 2
-            Bitmap printscreen = new Bitmap(Screen.PrimaryScreen.Bounds.Width,
-                                Screen.PrimaryScreen.Bounds.Height);
-            Graphics graphics = Graphics.FromImage(printscreen as Image);
-            graphics.CopyFromScreen(0, 0, 0, 0, printscreen.Size);
-            pictureBox1.Image =
-                new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, graphics);
         }
 
         // The target window's pattern to match

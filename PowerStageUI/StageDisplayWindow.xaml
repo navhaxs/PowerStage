@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PowerStage"
         mc:Ignorable="d"
-        Title="Stage Display Window" Height="1080" Width="1920" Background="Black" ResizeMode="CanResizeWithGrip">
+        Title="Stage Display Window"
+        Width="1280" Height="720" WindowState="Maximized"
+        Background="Black" ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <SolidColorBrush x:Key="Primary" Color="#FF9F9F9F"/>
         <SolidColorBrush x:Key="Black" Color="#FF141414"/>

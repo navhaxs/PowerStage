@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -62,15 +63,18 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Util\CaptureScreen.cs" />
     <Compile Include="Models\Messages.cs" />
-    <Compile Include="PresenterOverlayWindow.xaml.cs">
-      <DependentUpon>PresenterOverlayWindow.xaml</DependentUpon>
+    <Compile Include="Util\PlatformInvokeGDI32.cs" />
+    <Compile Include="Util\PlatformInvokeUSER32.cs" />
+    <Compile Include="PresenterToolbarWindow.xaml.cs">
+      <DependentUpon>PresenterToolbarWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="StageDisplayWindow.xaml.cs">
       <DependentUpon>StageDisplayWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\StageDisplayWindowViewModel.cs" />
-    <Page Include="PresenterOverlayWindow.xaml">
+    <Page Include="PresenterToolbarWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
