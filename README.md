@@ -1,20 +1,46 @@
-Wiimote Presenter PowerPoint Addin
+Powerstage for PowerPoint
 ==================================
 
-Control slideshows wirelessly from a Wii Remote on a Bluetooth-enabled Windows PC. PowerPoint 2007+ and .NET 4.0
+"Stage display hack for PowerPoint"
 
-Work in progress
+## The idea behind this project
 
-[Download Milestone 1](https://github.com/navhaxs/wiimote-presenter-powerpoint/releases/tag/pre-M1)
+When giving a PowerPoint presentation, the laptop has a Presenter View whilst the main output is shown on a projector.
 
-(Customisable key mapping coming soon)
+The concept of a stage display is an additional *third* display which faces the presenter/speaker (also known as a 'confidence monitor', and similar to the concept of a teleprompter).
 
-![Screenshot](http://i.imgur.com/Vr6mxfS.jpg)
+Consider using a desktop PC instead of a laptop, where the desktop PC is operated by someone else from a desk *behind the audience*. The stage display now replaces the Presenter View for the speaker.
 
-## Save your powerpoint slideshow before operating this Addin ##
-Please save your precious work before running! Many things can go wrong.
+tldr; This project replicates the PowerPoint Presenter View onto a separate window called the 'stage display'.
 
-## Attributions ##
-- Brian Peek's **WiimoteLib** http://wiimotelib.codeplex.com/
-- In The Hand **32feet.NET** http://32feet.codeplex.com/ for Bluetooth pairing
-- http://www.malteahrens.com/#/blog/howto-onenote-dev/ - pointers on using WiX to create the installer
+![Stage display window](https://i.imgur.com/QVLBF2G.png)
+
+There is the option to extract the slide text rather than render the image.
+
+![Stage display window](https://i.imgur.com/O7ugit9.png)
+
+![Overlay buttons designed to show over Presenter View](https://i.imgur.com/sEJDVDf.png)
+
+![PowerPoint toolbar](https://i.imgur.com/W6wUTN0.png)
+
+## Features
+
+- Send messages to the stage display (mostly finished implementing)
+- Hacky 'freeze projector display output' - works by taking a screenshot and showing it as topmost ;)
+
+## Limitations
+
+- Slides transitions won't show on the stage display.
+- Videos won't show on the stage display.
+
+## Current project status
+
+This project is in an incomplete state (or I'd be selling it :P). Some features were only half-finished. e.g.
+
+- Save/restore the window location (which display device)
+- Overlay toolbar (pops up over the Presenter View) with buttons to send messages to the stage.
+- Hacky 'show logo' view - works by showing an image and showing it as topmost.
+
+## License
+
+GPLv3

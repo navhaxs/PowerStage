@@ -122,6 +122,8 @@ namespace PowerStageAddin.ui
         {
             InitializeComponent();
             this.Opacity = 0;
+
+            // XXX assumes there is (at least) a dual display
             this.Location = Screen.AllScreens[1].WorkingArea.Location; // XXX find me from PPTFrameClass
 
         }

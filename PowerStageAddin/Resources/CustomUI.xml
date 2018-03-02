@@ -5,7 +5,7 @@
     <tabs>
       <tab idMso="TabSlideShow">
         <group idMso="GroupFont" visible="false" />
-        <group id="WiimotePP_group" label="Wii Remote" getImage="ReturnImage">
+        <group id="WiimotePP_group" label="PowerStage" getImage="ReturnImage">
           <button id="ButtonA12" label="Show Stage Display" size="large" getImage="ReturnImage" keytip="W1" supertip="Manage wii remote control settings" onAction="showWiimoteSetup"/>
           <button id="ButtonFreeze" label="Freeze Projector" size="large" getImage="ReturnImageFreeze" keytip="WF" supertip="Freeze projector display" onAction="showFreeze"/>
           <toggleButton id="toggleButton" label="Show Stage Display" size="large" getImage="ReturnImage" onAction="showWiimoteSetup" getPressed ="get_Pressed"/>
