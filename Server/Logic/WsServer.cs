@@ -22,7 +22,8 @@ namespace PowerSocketServer.Logic
             
             }
 
-            Send("");
+            Send("{\"action\":\"authenticate\", \"authenticated\": 1}");
+
         }
     }
 }

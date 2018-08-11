@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PowerSocketServer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,15 +25,29 @@ namespace Server
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = this;
+
+            Main.wsServer = new WebSocketServer(50002);
+            Main.wsServer.AddWebSocketService<PowerSocketServer.Logic.WsServer> ("/remote");
+            Main.wsServer.Start();
+            WebAddress = Main.wsServer.Address.ToString();
+
+            Main.httpServer = new SimpleHTTPServer(@"C:\Users\Jeremy\Desktop\", 50003);
+            HttpPort = Main.httpServer.Port.ToString();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        public String HttpPort { get; set; }
+
+        public String WebAddress { get; set; }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var wssv = new WebSocketServer();
-            wssv.AddWebSocketService<PowerSocketServer.Logic.WsServer> ("/PowerSocket");
-            wssv.Start ();
-            //Console.ReadKey (true);
-            //wssv.Stop ();
+            if (Main.wsServer != null)
+                Main.wsServer.Stop();
+
+            if (Main.httpServer != null)
+                Main.httpServer.Stop();
+
         }
     }
 }

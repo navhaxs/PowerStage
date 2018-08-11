@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ProPresenter 6 Stage Display Message Sender</title>
+    <link rel="stylesheet" type="text/css" href="./site.css">
+    <script type="application/javascript" src="./client.js" defer></script>
+    <script type="application/javascript" src="./site.js" defer></script>
+    <link rel="stylesheet" href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"/>
+  </head>
+  <body>
+    <button id="pref_open">Settings</button>
+    <div id="currentMessage"></div>
+    <div id="controls">
+      <input type="text" id="message" placeholder="Enter message here">
+      <button id="send">Send Message<span class="send-button"></span></button>
+      <button id="nextActionButton">Next slide</button>
+      <button id="prevActionButton">Prev slide</button>
+      <button id="blankActionButton">Blank</button>
+    </div>
+    <span id="status"></span>
+    <dialog id="preferences">
+      <h3>Preferences</h3>
+      <span><label>Address: </label><input id="pref_addr" type="text"></span>
+      <span><label>Port: </label><input id="pref_port" type="number" min="1" max="65535"></span>
+      <span><label>Password: </label><input id="pref_pass" type="text"></span>
+      <button id="pref_save">Save</button>
+    </dialog>
+  </body>
+</html>

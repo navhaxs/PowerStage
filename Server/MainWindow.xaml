@@ -5,9 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Server"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="113,150,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="240,150,0,0" VerticalAlignment="Top" Width="75"/>
-    </Grid>
+        Title="MainWindow" Height="250" Width="500" Closing="Window_Closing">
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top" Background="#FFDC5A5A">
+            <TextBlock Margin="10" Foreground="White" FontSize="16">Remote PowerPoint Control</TextBlock></DockPanel>
+        <Border VerticalAlignment="Center" HorizontalAlignment="Center" Padding="20" Background="#EEE" CornerRadius="2">
+            <StackPanel Orientation="Vertical">
+                <TextBlock FontSize="16">Connect to this IP address: <Run FontWeight="Medium" Text="{Binding WebAddress, FallbackValue='loading...'}" /></TextBlock>
+                <TextBlock><Run Text="{Binding HttpPort}" /></TextBlock>
+            </StackPanel>
+        </Border>
+    </DockPanel>
 </Window>

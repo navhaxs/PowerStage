@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Windows;
 using System.Windows.Media;
+using static PowerSocketServer.Helpers.BitmapHelpers;
 
 namespace PowerSocketServer.Logic
 {
@@ -82,29 +83,29 @@ namespace PowerSocketServer.Logic
             {
                 imgSource = BinaryStructConverter.ImageFromClipboardDib();
 
-                if (slide.SlideNumber == presentation.Slides.Count)
-                {
-                    Messenger.Default.Send(new ThumbnailUpdateMessage
-                        {
-                            CurrentSlideImage = imgSource,
-                            NextSlideImageIsEmpty = true,
-                            NextSlideImage = null
-                        }
-                    );
-                } else {
-                    getPPtData2();
-                    slide.Copy();
-                    if (Clipboard.GetDataObject().GetDataPresent(DataFormats.Bitmap))
-                    {
-                        imgSource2 = BinaryStructConverter.ImageFromClipboardDib();
-                        Messenger.Default.Send(new ThumbnailUpdateMessage
-                            {
-                                CurrentSlideImage = imgSource,
-                                NextSlideImage = imgSource2
-                            }
-                        );
-                    }
-                }
+                //if (slide.SlideNumber == presentation.Slides.Count)
+                //{
+                //    Messenger.Default.Send(new ThumbnailUpdateMessage
+                //        {
+                //            CurrentSlideImage = imgSource,
+                //            NextSlideImageIsEmpty = true,
+                //            NextSlideImage = null
+                //        }
+                //    );
+                //} else {
+                //    getPPtData2();
+                //    slide.Copy();
+                //    if (Clipboard.GetDataObject().GetDataPresent(DataFormats.Bitmap))
+                //    {
+                //        imgSource2 = BinaryStructConverter.ImageFromClipboardDib();
+                //        Messenger.Default.Send(new ThumbnailUpdateMessage
+                //            {
+                //                CurrentSlideImage = imgSource,
+                //                NextSlideImage = imgSource2
+                //            }
+                //        );
+                //    }
+                //}
             }
         }
 
