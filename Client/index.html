@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>ProPresenter 6 Stage Display Message Sender</title>
+    <title>PowerPoint Web Remote</title>
     <link rel="stylesheet" type="text/css" href="./site.css">
     <script type="application/javascript" src="./client.js" defer></script>
     <script type="application/javascript" src="./site.js" defer></script>
@@ -9,13 +9,19 @@
   </head>
   <body>
     <button id="pref_open">Settings</button>
+    <div>
+      <button id="nextActionButton" class="ba bg-blue f2 pa3">Next slide</button>
+      <button id="prevActionButton" class="ba bg-blue f2 pa3">Prev slide</button>
+      <button id="blankActionButton" class="ba bg-blue f2 pa3">Blank</button>
+      <div class="white dib f1 fr pa3"><span id="slideNumText">Slide 0/0</span></div>
+    </div>
+    <img src="http://localhost:50003/slide_1.png" alt="slide-1" />
+    <img src="http://localhost:50003/slide_2.png" alt="slide-2" class="w-25" />
+
     <div id="currentMessage"></div>
     <div id="controls">
       <input type="text" id="message" placeholder="Enter message here">
       <button id="send">Send Message<span class="send-button"></span></button>
-      <button id="nextActionButton">Next slide</button>
-      <button id="prevActionButton">Prev slide</button>
-      <button id="blankActionButton">Blank</button>
     </div>
     <div id="debugLog">
       Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log 
