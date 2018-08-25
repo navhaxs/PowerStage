@@ -136,7 +136,8 @@ class SimpleHTTPServer
     private void Listen()
     {
         _listener = new HttpListener();
-        _listener.Prefixes.Add("http://*:" + _port.ToString() + "/");
+        //_listener.Prefixes.Add("http://*:" + _port.ToString() + "/Temporary_Listen_Addresses/");
+        _listener.Prefixes.Add("http://+:50003/Temporary_Listen_Addresses/");
         
         _listener.Start();
         while (true)

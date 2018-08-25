@@ -4,16 +4,43 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Server"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="250" Width="500" Closing="Window_Closing">
+        FontSize="14"
+        mc:Ignorable="d" Background="#FFEBE8E8"
+        Title="Remote for PowerPoint" Closing="Window_Closing" Width="460" MaxWidth="460">
     <DockPanel>
-        <DockPanel DockPanel.Dock="Top" Background="#FFDC5A5A">
-            <TextBlock Margin="10" Foreground="White" FontSize="16">Remote PowerPoint Control</TextBlock></DockPanel>
-        <Border VerticalAlignment="Center" HorizontalAlignment="Center" Padding="20" Background="#EEE" CornerRadius="2">
-            <StackPanel Orientation="Vertical">
-                <TextBlock FontSize="16">Connect to this IP address: <Run FontWeight="Medium" Text="{Binding WebAddress, FallbackValue='loading...'}" /></TextBlock>
-                <TextBlock><Run Text="{Binding HttpPort}" /></TextBlock>
-            </StackPanel>
-        </Border>
+        <StackPanel DockPanel.Dock="Top" Background="#FFA34E3E">
+            <TextBlock Margin="15" Foreground="White" FontSize="16">Remote for PowerPoint</TextBlock>
+        </StackPanel>
+
+        <Grid DockPanel.Dock="Bottom">
+            <TextBlock Margin="10" Foreground="#FFA8A8A8">Remote for PowerPoint v1.0</TextBlock>
+            <TextBlock TextAlignment="Right" Margin="10" Foreground="#FFA8A8A8">© <Run FontWeight="Bold">VisionScreens</Run> 2018</TextBlock>
+        </Grid>
+
+        <StackPanel VerticalAlignment="Center" Margin="20 0">
+
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0 0 0 40">
+                <Run FontSize="16" FontWeight="Bold">Use your phone, tablet or another computer as a remote control for PowerPoint</Run>
+                <LineBreak />
+                <LineBreak />
+                <Run FontWeight="12">iOS, Android, Mac and Windows</Run>
+            </TextBlock>
+            
+            <Border VerticalAlignment="Center" HorizontalAlignment="Center" Padding="20" BorderThickness="2" CornerRadius="25 25 25 0" BorderBrush="#FFB7472A" Background="White">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock FontWeight="Medium" FontSize="16" TextWrapping="Wrap" TextAlignment="Center" Foreground="Black">Navigate to this web address<LineBreak /><Run Text="{Binding WebAddress, FallbackValue='(starting up...)'}" /></TextBlock>
+                </StackPanel>
+            </Border>
+
+
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0 40 0 0" Foreground="#FFA8A8A8">
+                Wi-Fi: <Run Text="{Binding WiFiAddress, FallbackValue='xxxxxxxxxxxx'}" />
+                <LineBreak />
+                PIN: xxxxxxxxxxxx
+                <LineBreak />
+                Debug webserver port=<Run Text="{Binding HttpPort, FallbackValue='not started'}" />
+            </TextBlock>
+
+        </StackPanel>
     </DockPanel>
 </Window>

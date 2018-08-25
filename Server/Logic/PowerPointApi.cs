@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using GalaSoft.MvvmLight.Messaging;
+using PowerSocketServer.Models;
+using System.Data;
 using System.Windows;
 using System.Windows.Media;
 using static PowerSocketServer.Helpers.BitmapHelpers;
@@ -16,6 +18,12 @@ namespace PowerSocketServer.Logic
 
         public void NextSlide() {
             SyncState();
+
+            if (state.slide == null)
+            {
+                Messenger.Default.Send(new EventMessages() { Message = "Failed to Next Slide: No current slide" });
+                return;
+            }
 
             int slideIndex = state.slide.SlideIndex + 1;
             if (slideIndex > state.slidescount)
@@ -43,6 +51,12 @@ namespace PowerSocketServer.Logic
         public void PrevSlide()
         {
             SyncState();
+
+            if (state.slide == null)
+            {
+                Messenger.Default.Send(new EventMessages() { Message = "Failed to Prev Slide: No current slide" });
+                return;
+            }
 
             int slideIndex = state.slide.SlideIndex - 1;
             if (slideIndex >= 1)
