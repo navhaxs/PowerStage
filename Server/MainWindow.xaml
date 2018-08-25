@@ -38,7 +38,7 @@
                 <LineBreak />
                 PIN: xxxxxxxxxxxx
                 <LineBreak />
-                Debug webserver port=<Run Text="{Binding HttpPort, FallbackValue='not started'}" />
+                Debug webserver port=<Hyperlink Click="Hyperlink_Click"><Run Text="{Binding HttpPort, FallbackValue='not started'}" /></Hyperlink>
             </TextBlock>
 
         </StackPanel>

@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using NetOffice.PowerPointApi;
 using static PowerSocketServer.Helpers.BitmapHelpers;
+using System;
 
 namespace PowerSocketServer.Logic
 {

@@ -110,7 +110,9 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Helpers\BitmapHelpers.cs" />
+    <Compile Include="Helpers\EmbeddedResource.cs" />
     <Compile Include="Helpers\GetNetworkAddress.cs" />
+    <Compile Include="Helpers\HttpServerHelper.cs" />
     <Compile Include="Helpers\NetworkAddress.cs" />
     <Compile Include="Helpers\TempDir.cs" />
     <Compile Include="Logic\PowerPointApi.cs" />
@@ -156,10 +158,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Public\client.js" />
-    <Content Include="Public\index.html" />
-    <Content Include="Public\site.css" />
-    <Content Include="Public\site.js" />
+    <EmbeddedResource Include="Public\client.js" />
+    <EmbeddedResource Include="Public\index.html" />
+    <EmbeddedResource Include="Public\site.css" />
+    <EmbeddedResource Include="Public\site.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

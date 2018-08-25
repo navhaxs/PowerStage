@@ -42,7 +42,7 @@ namespace Server
 
             Main.httpServer = new SimpleHTTPServer(TempDir.GetTempDirPath(), 50003);
             Main.tcpHttpServer = new TcpHttpServer();
-            HttpPort = Main.httpServer.Port.ToString() + " " + Main.tcpHttpServer.GetAddress();
+            HttpPort = Main.tcpHttpServer.GetAddress(); //Main.httpServer.Port.ToString() + " " +
             WiFiAddress = string.Join(",", GetNetworkAddress.Fetch().ToArray());
         }
 
@@ -60,6 +60,11 @@ namespace Server
             if (Main.httpServer != null)
                 Main.httpServer.Stop();
 
+        }
+
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(String.Format("{0}", HttpPort));
         }
     }
 }
