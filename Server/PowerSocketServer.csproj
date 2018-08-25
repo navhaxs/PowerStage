@@ -92,8 +92,11 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Helpers\BitmapHelpers.cs" />
+    <Compile Include="Helpers\NetworkAddress.cs" />
+    <Compile Include="Helpers\TempDir.cs" />
     <Compile Include="Logic\PowerPointApi.cs" />
     <Compile Include="Logic\SimpleHttpServer.cs" />
+    <Compile Include="Logic\TcpHttpServer.cs" />
     <Compile Include="Logic\WsServer.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="MainWindow.xaml.cs">

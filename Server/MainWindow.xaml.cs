@@ -1,4 +1,5 @@
 ﻿using PowerSocketServer;
+using PowerSocketServer.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PowerSocketServer.Logic;
 using WebSocketSharp.Server;
 
 namespace Server
@@ -27,13 +29,21 @@ namespace Server
             InitializeComponent();
             this.DataContext = this;
 
+            
+            //System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
+
             Main.wsServer = new WebSocketServer(50002);
             Main.wsServer.AddWebSocketService<PowerSocketServer.Logic.WsServer> ("/remote");
             Main.wsServer.Start();
-            WebAddress = Main.wsServer.Address.ToString();
+            WebAddress = string.Join(",", NetworkAddress.GetLocalIPAddress()); //Main.wsServer.Address.ToString();
 
-            Main.httpServer = new SimpleHTTPServer(@"C:\Users\Jeremy\Desktop\", 50003);
-            HttpPort = Main.httpServer.Port.ToString();
+            // @jeremy TODO this must be run as admin due to Windows http.sys ACL
+            // Either replace this with a TcpListener, or launch (only) the SimpleHttpServer with elevation,
+            // Or send it over websockets
+
+            Main.httpServer = new SimpleHTTPServer(TempDir.GetTempDirPath(), 50003);
+            Main.tcpHttpServer = new TcpHttpServer();
+            HttpPort = Main.httpServer.Port.ToString() + " " + Main.tcpHttpServer.GetAddress();
         }
 
         public String HttpPort { get; set; }
