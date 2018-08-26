@@ -8,7 +8,7 @@
         mc:Ignorable="d" Background="#FFEBE8E8"
         Title="Remote for PowerPoint" Closing="Window_Closing" Width="460" MaxWidth="460">
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Background="#FFA34E3E">
+        <StackPanel DockPanel.Dock="Top" Background="#b7472a">
             <TextBlock Margin="15" Foreground="White" FontSize="16">Remote for PowerPoint</TextBlock>
         </StackPanel>
 
@@ -17,28 +17,31 @@
             <TextBlock TextAlignment="Right" Margin="10" Foreground="#FFA8A8A8">© <Run FontWeight="Bold">VisionScreens</Run> 2018</TextBlock>
         </Grid>
 
+        <CheckBox DockPanel.Dock="Bottom" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Content="Always on top"/>
         <StackPanel VerticalAlignment="Center" Margin="20 0">
 
             <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0 0 0 40">
                 <Run FontSize="16" FontWeight="Bold">Use your phone, tablet or another computer as a remote control for PowerPoint</Run>
                 <LineBreak />
                 <LineBreak />
-                <Run FontWeight="12">iOS, Android, Mac and Windows</Run>
+                <Run FontWeight="Light">iOS, Android, Mac and Windows</Run>
             </TextBlock>
             
-            <Border VerticalAlignment="Center" HorizontalAlignment="Center" Padding="20" BorderThickness="2" CornerRadius="25 25 25 0" BorderBrush="#FFB7472A" Background="White">
+            <Border VerticalAlignment="Center" HorizontalAlignment="Center" Padding="15 20" BorderThickness="2" CornerRadius="25 25 25 0" BorderBrush="#FFB7472A" Background="White">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock FontWeight="Medium" FontSize="16" TextWrapping="Wrap" TextAlignment="Center" Foreground="Black">Navigate to this web address<LineBreak /><Run Text="{Binding WebAddress, FallbackValue='(starting up...)'}" /></TextBlock>
+                    <TextBlock Foreground="#FF313131" FontWeight="Medium" FontSize="16" TextWrapping="Wrap" TextAlignment="Center">Visit this web address from your other device<LineBreak />
+                        <Hyperlink Click="Hyperlink_Click"><Run Text="{Binding WiFiAddress, FallbackValue='xxxxxxxxxxxx'}" /></Hyperlink>
+                    </TextBlock>
                 </StackPanel>
             </Border>
 
 
             <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0 40 0 0" Foreground="#FFA8A8A8">
-                Wi-Fi: <Run Text="{Binding WiFiAddress, FallbackValue='xxxxxxxxxxxx'}" />
-                <LineBreak />
                 PIN: xxxxxxxxxxxx
                 <LineBreak />
                 Debug webserver port=<Hyperlink Click="Hyperlink_Click"><Run Text="{Binding HttpPort, FallbackValue='not started'}" /></Hyperlink>
+                <LineBreak />
+                Debug info=<Run Text="{Binding DebugOutput}" />
             </TextBlock>
 
         </StackPanel>

@@ -7,6 +7,7 @@ using Nancy.Json;
 using System.Diagnostics;
 using WebSocketSharp;
 using WebSocketSharp.Server;
+using Newtonsoft.Json.Linq;
 
 namespace PowerSocketServer.Logic
 {
@@ -15,9 +16,9 @@ namespace PowerSocketServer.Logic
 
         public WsServer()   
         {
-            Messenger.Default.Register<EventMessages>(this, (EventMessages eventMessages) =>
+            Messenger.Default.Register<ResponseMessage>(this, (ResponseMessage eventMessages) =>
             {
-                string payload = "{\"message\":" + JsonConvert.ToString(eventMessages.Message) + "}";
+                string payload = "{\"message\":" + JsonConvert.ToString(eventMessages.WsResponseMessage) + "}";
                 Send(payload);
             });
         }
@@ -26,7 +27,11 @@ namespace PowerSocketServer.Logic
         {
             string response = "{\"error\":\"bad request\"}";
 
-            switch (e.Data)
+            Debug.Print(e.Data);
+
+            JObject jsonData = JObject.Parse(e.Data);
+
+            switch (jsonData["action"].ToString())
             {
                 case Message.AUTHENTICATE:
                     response = "{\"action\":\"authenticate\", \"authenticated\": 1}";

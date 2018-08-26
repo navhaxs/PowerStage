@@ -1,7 +1,16 @@
-﻿namespace PowerSocketServer.Models
+﻿using static PowerSocketServer.Logic.PowerPointApi;
+
+namespace PowerSocketServer.Models
 {
-    class EventMessages
+
+    // Message to send to client
+    class ResponseMessage
     {
-        public string Message { get; set; }
+        public string WsResponseMessage { get; set; }
+    }
+
+    class StateUpdateMessage
+    {
+        public StateInfo state { get; set; }
     }
 }

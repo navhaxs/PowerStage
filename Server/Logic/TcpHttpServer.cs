@@ -13,10 +13,16 @@ namespace PowerSocketServer.Logic
     class TcpHttpServer
     {
         private string _address;
+        private int _port;
 
         public string GetAddress()
         {
             return _address;
+        }
+
+        public int GetPort()
+        {
+            return _port;
         }
 
         public TcpHttpServer()
@@ -30,7 +36,8 @@ namespace PowerSocketServer.Logic
             // Creates a redirect URI using an available port on the loopback address.
             var listener = new TcpListener(IPAddress.Parse("0.0.0.0"), 0);
             listener.Start();
-            _address = string.Format("http://{0}:{1}/", IPAddress.Loopback, ((IPEndPoint)listener.LocalEndpoint).Port);
+            _port = ((IPEndPoint)listener.LocalEndpoint).Port;
+            _address = string.Format("http://{0}:{1}/", IPAddress.Loopback, _port);
 
             string path = null;
             // Creates the OAuth 2.0 authorization request.

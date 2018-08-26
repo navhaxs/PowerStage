@@ -1,6 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using PowerSocketServer.Models;
-using System.Data;
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
@@ -29,7 +28,7 @@ namespace PowerSocketServer.Logic
 
             if (state.slide == null)
             {
-                Messenger.Default.Send(new EventMessages() { Message = "Failed to Next Slide: No current slide" });
+                Messenger.Default.Send(new ResponseMessage() { WsResponseMessage = "Failed to Next Slide: No current slide" });
                 return;
             }
 
@@ -62,7 +61,7 @@ namespace PowerSocketServer.Logic
 
             if (state.slide == null)
             {
-                Messenger.Default.Send(new EventMessages() { Message = "Failed to Prev Slide: No current slide" });
+                Messenger.Default.Send(new ResponseMessage() { WsResponseMessage = "Failed to Prev Slide: No current slide" });
                 return;
             }
 
@@ -264,13 +263,28 @@ namespace PowerSocketServer.Logic
             public NetOffice.PowerPointApi.Presentation presentation;
             public NetOffice.PowerPointApi.Slides slides;
             public NetOffice.PowerPointApi.Slide slide;
-            public StateInfo info;
+            private StateInfo _info;
+            public StateInfo info {
+                get
+                {
+                    return _info;
+                }
+                set
+                {
+                    _info = value;
+                    Messenger.Default.Send(new StateUpdateMessage() { state = value });
+                }
+            }
         }
 
         public class StateInfo
         {
             public int totalSlidesCount { get; set; }
             public int currentSlideIndex { get; set; }
+
+            public override string ToString() {
+                return $"{currentSlideIndex}/{totalSlidesCount}";
+            }
         }
 
         public StateInfo GetStateInfo()

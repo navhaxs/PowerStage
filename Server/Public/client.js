@@ -2,8 +2,8 @@
 // ProPresenter.UI.Plugin.ProNetwork.RVProRemoteWebSocketServiceHandler
 
 const debug = false;
-const default_host = 'localhost';
-const default_port = '50001';
+const default_host = window.location.hostname;
+const default_port = '50003';
 const default_pass = 'control';
 
 let socket;
@@ -29,7 +29,7 @@ function connect(obj) {
     obj.authSuccess && (cb_authSuccess = obj.authSuccess);
     obj.authFail && (cb_authFail = obj.authFail);
 
-    var host = localStorage.getItem("host") || default_host;
+    var host = default_host; //localStorage.getItem("host") || default_host;
     var port = localStorage.getItem("port") || default_port;
     debug && console.log(`Connecting to ws://${host}:${port}/remote`);
     socket = new WebSocket(`ws://${host}:${port}/remote`);
