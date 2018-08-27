@@ -54,7 +54,10 @@ function authenticate() {
 function listen() {
     socket.onmessage = function(event) {
         var msg = JSON.parse(event.data);
+        var div = document.getElementById('debugLog');
 
+        div.innerHTML = JSON.stringify(msg) + "<br />" + div.innerHTML;
+        
         switch (msg.action) {
             case "authenticate":
                 debug && console.log("Authentication " + (msg.authenticated ? "success" : "failed"));

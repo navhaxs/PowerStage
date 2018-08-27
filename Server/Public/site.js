@@ -75,6 +75,11 @@ elem("send").addEventListener("click", function() {
 // })
 
 function showPreferences() {
+    // todo move elsewhere
+    if (screenfull.enabled) {
+        screenfull.request();
+    }
+
     elem("preferences").showModal();
     elem("pref_addr").value = localStorage.getItem("host") || default_host;
     elem("pref_port").value = localStorage.getItem("port") || default_port;

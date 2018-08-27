@@ -2,8 +2,12 @@
 <html>
   <head>
     <title>PowerPoint Web Remote</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
     <link rel="stylesheet" type="text/css" href="./site.css">
     <script type="application/javascript" src="./client.js" defer></script>
+    <script type="application/javascript" src="./screenfull.min.js" defer></script>
     <script type="application/javascript" src="./site.js" defer></script>
     <link rel="stylesheet" href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"/>
   </head>
@@ -11,14 +15,28 @@
     <button id="pref_open">Settings</button>
     <div id="currentMessage"></div>
     <div id="controls">
-      <input type="text" id="message" placeholder="Enter message here">
-      <button id="send">Send Message<span class="send-button"></span></button>
-      <button id="nextActionButton">Next slide</button>
-      <button id="prevActionButton">Prev slide</button>
-      <button id="blankActionButton">Blank</button>
+
+      <div style="display: none">
+        <input type="text" id="message" placeholder="Enter message here">
+        <button id="send">Send Message<span class="send-button"></span></button>
+      </div>
+
+      <div class="flex">
+        <button id="prevActionButton" class="w-50">
+            <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="24" height="24" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" fill="white" /></svg>
+            <br />
+            Prev slide
+        </button>
+        <button id="nextActionButton" class="w-50">
+            <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="24" height="24" viewBox="0 0 24 24"><path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" fill="white" /></svg>
+            <br />
+            Next slide
+        </button>
+      </div>
+
+      <button id="blankActionButton" class="w-100">Blank</button>
     </div>
     <div id="debugLog">
-      Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log Debug log 
     </div>
     <span id="status"></span>
     <dialog id="preferences">

@@ -4,13 +4,23 @@ body {
   margin: 0;
 }
 
+#debugLog {
+  padding: 10px;
+  color: #eee;
+  overflow-y: scroll;
+}
+
 /* buttons */
 #nextActionButton,
 #prevActionButton,
 #blankActionButton {
   font-size: 18px;
-  padding: 1.2em 2.4em;
+  padding: 1.2em 0.4em;
   background-color: #008CBA;
+}
+
+#blankActionButton {
+  background-color: #005E7D;
 }
 
 #currentMessage {
@@ -43,10 +53,8 @@ body {
     color: black;
   }
 }
-
 #controls {
   margin: 0 auto;
-  min-width: 360px;
 }
 
 #controls #message::placeholder {
