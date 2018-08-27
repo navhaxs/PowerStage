@@ -6,20 +6,27 @@ using System.Windows.Media;
 using NetOffice.PowerPointApi;
 using static PowerSocketServer.Helpers.BitmapHelpers;
 using System;
+using System.Diagnostics;
 
 namespace PowerSocketServer.Logic
 {
     class PowerPointApi
     {
-        readonly NetOffice.PowerPointApi.Application _pptInstance;
+        private NetOffice.PowerPointApi.Application _pptInstance;
 
         public PowerPointApi(NetOffice.PowerPointApi.Application pptInstance)
         {
+            Connect(pptInstance);
+        }
+
+        private void Connect(NetOffice.PowerPointApi.Application pptInstance)
+        {
             this._pptInstance = pptInstance;
+            // Dispose any existing event listener and re-register with this ppt instance
             EventListener eventListener = new EventListener();
-            eventListener.PowerPointSlideChangedEvent += (o, args) => SyncState(); 
-            eventListener.PowerPointPresentationOpenEvent += (o, args) => ExportSlides(); 
-            eventListener.RegisterPowerPointInstance(pptInstance);
+            eventListener.PowerPointSlideChangedEvent += (o, args) => SyncState();
+            eventListener.PowerPointPresentationOpenEvent += (o, args) => ExportSlides();
+            eventListener.RegisterPowerPointInstance(this._pptInstance);
         }
 
         // Methods
@@ -100,6 +107,11 @@ namespace PowerSocketServer.Logic
             foreach (DirectoryInfo dir in di.GetDirectories())
             {
                 dir.Delete(true); 
+            }
+
+            if (state.presentation == null)
+            {
+                return;
             }
 
             foreach (Slide slide in state.presentation.Slides)
@@ -225,6 +237,7 @@ namespace PowerSocketServer.Logic
         {
             public void Update(NetOffice.PowerPointApi.Application pptInstance)
             {
+
                 try
                 {
                     if (pptInstance != null)
@@ -236,15 +249,30 @@ namespace PowerSocketServer.Logic
                         slides = presentation.Slides;
                 
                         // Get current selected slide 
-                        try
+                        if (pptInstance.Presentations.Count == 0 || pptInstance.ActivePresentation == null)
+
+                        {
+
+                        } else if (pptInstance.SlideShowWindows.Count > 0) 
+                        {
+                            // Get selected slide object in reading view
+                            slide = pptInstance.SlideShowWindows[1].View.Slide;
+                        }
+                        else
                         {
                             // Get selected slide object in normal view
                             slide = slides[pptInstance.ActiveWindow.Selection.SlideRange.SlideNumber];
                         }
+
+                        try
+                        {
+
+
+                            
+                        }
                         catch
                         {
-                            // Get selected slide object in reading view
-                            slide = pptInstance.SlideShowWindows[1].View.Slide;
+                            
                         }
 
                         // Get Slide count
@@ -298,6 +326,9 @@ namespace PowerSocketServer.Logic
          */
         private void SyncState()
         {
+            //? retry Connect
+            //Connect(); 
+
             state.Update(_pptInstance);
         }
     }
