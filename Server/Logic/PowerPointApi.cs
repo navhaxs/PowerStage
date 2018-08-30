@@ -26,6 +26,7 @@ namespace PowerSocketServer.Logic
             EventListener eventListener = new EventListener();
             eventListener.PowerPointSlideChangedEvent += (o, args) => SyncState();
             eventListener.PowerPointPresentationOpenEvent += (o, args) => ExportSlides();
+            
             eventListener.RegisterPowerPointInstance(this._pptInstance);
         }
 
@@ -136,6 +137,7 @@ namespace PowerSocketServer.Logic
 
                 // Content changed
                 pptInstance.AfterPresentationOpenEvent += (pres) => OnRaisePresentationOpenEvent(EventArgs.Empty);
+                pptInstance.SlideShowBeginEvent += (pres) => OnRaisePresentationOpenEvent(EventArgs.Empty);
 
                 // Slide changed
                 pptInstance.SlideSelectionChangedEvent += range => OnRaiseCustomEvent(EventArgs.Empty);

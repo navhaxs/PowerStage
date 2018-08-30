@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -39,74 +37,73 @@ namespace PowerSocketServer.Logic
             _port = ((IPEndPoint)listener.LocalEndpoint).Port;
             _address = string.Format("http://{0}:{1}/", IPAddress.Loopback, _port);
 
-            string path = null;
-            // Creates the OAuth 2.0 authorization request.
-            //string authorizationRequest = string.Format("{0}?response_type=code&scope=openid%20profile&redirect_uri={1}&client_id={2}&state={3}&code_challenge={4}&code_challenge_method={5}",
-            //    authorizationEndpoint,
-            //    System.Uri.EscapeDataString(redirectURI),
-            //    clientID,
-            //    state,
-            //    code_challenge,
-            //    code_challenge_method);
-
-            //// Opens request in the browser.
-            //System.Diagnostics.Process.Start(authorizationRequest);
+            
 
             bool run = true;
-            int count = 0;
+
             while (run)
             {
-                // Waits for the OAuth authorization response.
                 var client = await listener.AcceptTcpClientAsync();
-                
 
-                // Read response.
+                // Parse HTTP header
                 var response = ReadString(client);
 
-                string text = null;
-                // Brings this app back to the foreground.
-                //this.Activate();
+                string path = null;
+                string content = null;
+                byte[] bytes = null;
 
+                // Parse HTTP header - get the first line
                 string first = new StringReader(response).ReadLine();
-
                 if (first != null)
                 {
-
-
                     string[] res = first.Split(' ');
                     if (res.Length >= 2)
                     {
                         string method = res[0];
                         path = res[1];
 
-                        var m = path.LastIndexOf('/');
-                        if (m > -1)
+
+                        // / --> /remote
+                        // /slides (WARNING: insecure)
+                        // /remote
+                        // /stage
+
+
+                        if (path.StartsWith("/slides/"))
                         {
-                            path = path.Substring(m + 1);
+                            path = path.Replace("/slides/", "");
+                            bytes = File.ReadAllBytes(System.IO.Path.Combine( Helpers.TempDir.GetTempDirPath(), path));
                         }
-
-                        if (path == "")
+                        else
                         {
-                            path = "index.html";
-                        }
 
-                        System.Diagnostics.Debug.Print(path);
-                        if (Helpers.EmbeddedResource.HasResource("PowerSocketServer.Public." + path))
-                        {
-                            text = Helpers.EmbeddedResource.GetResource("PowerSocketServer.Public." + path);
+                            var m = path.LastIndexOf('/');
+                            if (m > -1)
+                            {
+                                path = path.Substring(m + 1);
+                            }
 
+                            if (path == "")
+                            {
+                                path = "index.html";
+                            }
+
+                            System.Diagnostics.Debug.Print(path);
+
+                            if (Helpers.EmbeddedResource.HasResource("PowerSocketServer.Public." + path))
+                            {
+                                content = Helpers.EmbeddedResource.GetResource("PowerSocketServer.Public." + path);
+                            }
                         }
 
                     }
                 }
 
 
-                    WriteStringAsync(client, text, path).ContinueWith(t => // "<html><head><meta http-equiv='refresh' content='10;url=https://google.com'></head><body>Please close this window and return to the app." + count + "</body></html>").ContinueWith(t =>
+                WriteStringAsync(client, content, bytes, path).ContinueWith(t =>
                 {
+                    // callback
                     client.Dispose();
-                    //listener.Stop();
-                    count++;
-                    //Console.WriteLine("HTTP server stopped.");
                 });
 
 
@@ -148,13 +145,13 @@ namespace PowerSocketServer.Logic
             return fullServerReply;
         }
 
-        private Task WriteStringAsync(TcpClient client, string str, string path)
+        private Task WriteStringAsync(TcpClient client, string str, byte[] bytes, string path)
         {
             return Task.Run(() =>
             {
                 using (var writer = new StreamWriter(client.GetStream(), new UTF8Encoding(false)))
                 {
-                    if (str == null)
+                    if (str == null && bytes == null)
                     {
                         writer.Write("HTTP/1.0 404 Not Found");
                         writer.Write(Environment.NewLine);
@@ -175,10 +172,22 @@ namespace PowerSocketServer.Logic
 
                         //writer.Write("Content-Type: text/html; charset=UTF-8");
                         //writer.Write(Environment.NewLine);
-                        writer.Write("Content-Length: " + str.Length);
-                        writer.Write(Environment.NewLine);
-                        writer.Write(Environment.NewLine);
-                        writer.Write(str);
+                        
+                        if (bytes != null)
+                        {
+                            writer.Write("Content-Length: " + bytes.Length);
+                            writer.Write(Environment.NewLine);
+                            writer.Write(Environment.NewLine);
+                            writer.Flush();
+                            writer.BaseStream.Write(bytes, 0, bytes.Length);
+                        }
+                        else
+                        {
+                            writer.Write("Content-Length: " + str.Length);
+                            writer.Write(Environment.NewLine);
+                            writer.Write(Environment.NewLine);
+                            writer.Write(str);
+                        }
                     }
                 }
             });
