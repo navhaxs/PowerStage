@@ -72,5 +72,10 @@ namespace Server
         {
             Topmost = false;
         }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            Messenger.Default.Send(new powerpointApiSyncSlides());
+        }
     }
 }

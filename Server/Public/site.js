@@ -82,14 +82,16 @@ function showPreferences() {
 
     elem("preferences").showModal();
     elem("pref_addr").value = localStorage.getItem("host") || default_host;
-    elem("pref_port").value = localStorage.getItem("port") || default_port;
+    elem("pref_control_port").value = localStorage.getItem("control_port") || default_control_port;
+    elem("pref_web_port").value = localStorage.getItem("web_port") || default_web_port;
     elem("pref_pass").value = localStorage.getItem("pass") || default_pass;
 }
 elem("pref_open").addEventListener("click", showPreferences);
 
 elem("pref_save").addEventListener("click", function() {
     localStorage.setItem("host", elem("pref_addr").value || default_host);
-    localStorage.setItem("port", elem("pref_port").value || default_port);
+    localStorage.setItem("control_port", elem("pref_control_port").value || default_control_port);
+    localStorage.setItem("web_port", elem("pref_web_port").value || default_web_port);
     localStorage.setItem("pass", elem("pref_pass").value || default_pass);
     socket.close()
     status_disconnected();

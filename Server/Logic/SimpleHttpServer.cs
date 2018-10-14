@@ -186,6 +186,7 @@ class SimpleHTTPServer
                 context.Response.ContentLength64 = input.Length;
                 context.Response.AddHeader("Date", DateTime.Now.ToString("r"));
                 context.Response.AddHeader("Last-Modified", System.IO.File.GetLastWriteTime(filename).ToString("r"));
+                // TODO: cache policy. what if powerpoint presentation changed? must invalidate all old thumbnails
 
                 byte[] buffer = new byte[1024 * 16];
                 int nbytes;

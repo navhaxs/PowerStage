@@ -2,7 +2,7 @@
 
 namespace PowerSocketServer.ViewModels
 {
-    class Base : INotifyPropertyChanged
+    public class Base : INotifyPropertyChanged
     {
         protected void OnPropertyChanged(PropertyChangedEventArgs e)
         {

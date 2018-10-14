@@ -1,48 +1,116 @@
-﻿<Window x:Class="Server.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Server"
-        FontSize="14"
-        mc:Ignorable="d" Background="#FFEBE8E8"
-        Title="Remote for PowerPoint" Closing="Window_Closing" Width="460" MaxWidth="460">
+﻿<Window
+    x:Class="Server.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:PowerSocketServer.Helpers.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Server"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Remote for PowerPoint"
+    Width="460"
+    MaxWidth="460"
+    Background="#faf5fd"
+    Closing="Window_Closing"
+    FontSize="14"
+    mc:Ignorable="d" d:DesignHeight="665.1">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    </Window.Resources>
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Background="#b7472a">
-            <TextBlock Margin="15" Foreground="White" FontSize="16">Remote for PowerPoint</TextBlock>
-        </StackPanel>
+        <Border Background="#FF5E4ECC" BorderBrush="#4b3ea3"  DockPanel.Dock="Top" BorderThickness="0,0,0,10">
+            <DockPanel Margin="0 5 0 0">
+                <Image Height="25" Source="test.png" DockPanel.Dock="Right" Margin="0 0 10 0" />
+                <TextBlock
+                    Margin="15"
+                    FontSize="16"
+                    Foreground="White">
+                    Remote for PowerPoint
+                </TextBlock>
+            </DockPanel>
+        </Border>
 
         <Grid DockPanel.Dock="Bottom">
-            <TextBlock Margin="10" Foreground="#FFA8A8A8">Remote for PowerPoint v1.0</TextBlock>
-            <TextBlock TextAlignment="Right" Margin="10" Foreground="#FFA8A8A8">© <Run FontWeight="Bold">VisionScreens</Run> 2018</TextBlock>
+            <TextBlock Margin="10" Foreground="#FFA8A8A8">v1.0</TextBlock>
+            <TextBlock
+                Margin="10"
+                Foreground="#FFA8A8A8"
+                TextAlignment="Right">
+                © Jeremy Wong 2018</TextBlock>
         </Grid>
 
-        <CheckBox DockPanel.Dock="Bottom" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Content="Always on top"/>
-        <StackPanel VerticalAlignment="Center" Margin="20 0">
+        <DockPanel DockPanel.Dock="Bottom">
+            <Button
+                Width="140"
+                Margin="0,0,10,0"
+                Click="ButtonBase_OnClick"
+                Content="Sync"
+                DockPanel.Dock="Right"
+                IsEnabled="{Binding IsExportingSlides, Converter={StaticResource InverseBooleanConverter}}" />
 
-            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0 0 0 40">
-                <Run FontSize="16" FontWeight="Bold">Use your phone, tablet or another computer as a remote control for PowerPoint</Run>
-                <LineBreak />
-                <LineBreak />
-                <Run FontWeight="Light">iOS, Android, Mac and Windows</Run>
-            </TextBlock>
+            <CheckBox
+                Margin="10,0,0,0"
+                VerticalAlignment="Center"
+                Checked="CheckBox_Checked"
+                Content="Always on top"
+                DockPanel.Dock="Left"
+                Unchecked="CheckBox_Unchecked" />
+        </DockPanel>
+
+        <StackPanel Margin="20,0" VerticalAlignment="Center">
             
-            <Border VerticalAlignment="Center" HorizontalAlignment="Center" Padding="15 20" BorderThickness="2" CornerRadius="25 25 25 0" BorderBrush="#FFB7472A" Background="White">
+            <Image Width="80" Margin="0 0 0 20" Source="mobile-phone_1f4f1.png" />
+
+            <TextBlock
+                Margin="0,0,0,30"
+                HorizontalAlignment="Center"
+                TextAlignment="Center"
+                TextWrapping="Wrap">
+                <Run FontSize="16" FontWeight="Bold">Use your phone, tablet or another computer as a remote control for PowerPoint</Run>
+            </TextBlock>
+
+            <Border
+                Padding="15,20"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="White"
+                BorderBrush="#FFCC4E4E"
+                BorderThickness="2"
+                CornerRadius="25 25 25 0">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Foreground="#FF313131" FontWeight="Medium" FontSize="16" TextWrapping="Wrap" TextAlignment="Center">Visit this web address from your other device<LineBreak />
-                        <Hyperlink Click="Hyperlink_Click"><Run Text="{Binding WiFiAddress, FallbackValue='xxxxxxxxxxxx'}" /></Hyperlink>
+                    <TextBlock
+                        FontSize="16"
+                        FontWeight="Medium"
+                        Foreground="#FF313131"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap">
+                        Visit this web address from your other device<LineBreak />
+                        <Hyperlink Click="Hyperlink_Click">
+                            <Run Text="{Binding WiFiAddress, FallbackValue='xxxxxxxxxxxx'}" />
+                        </Hyperlink>
                     </TextBlock>
                 </StackPanel>
             </Border>
 
 
-            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0 40 0 0" Foreground="#FFA8A8A8">
-                PIN: xxxxxxxxxxxx
-                <LineBreak />
-                Debug webserver port=<Hyperlink Click="Hyperlink_Click"><Run Text="{Binding HttpPort, FallbackValue='not started'}" /></Hyperlink>
+            <TextBlock
+                Margin="0,40,0,10"
+                HorizontalAlignment="Center"
+                Foreground="#FFA8A8A8"
+                TextAlignment="Center"
+                TextWrapping="Wrap">
+                PIN: xxxxxxxxxxxx<LineBreak />
+                Debug webserver port=<Hyperlink Click="Hyperlink_Click">
+                    <Run Text="{Binding HttpPort, FallbackValue='not started'}" />
+                </Hyperlink>
                 <LineBreak />
                 Debug info=<Run Text="{Binding DebugOutput}" />
             </TextBlock>
+
+            <StackPanel Margin="40,20" Visibility="{Binding IsExportingSlides, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock>Generating slide thumbnails...</TextBlock>
+                <ProgressBar Height="10" Value="{Binding Progress}" />
+            </StackPanel>
 
         </StackPanel>
     </DockPanel>

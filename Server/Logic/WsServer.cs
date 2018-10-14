@@ -18,7 +18,21 @@ namespace PowerSocketServer.Logic
         {
             Messenger.Default.Register<ResponseMessage>(this, (ResponseMessage eventMessages) =>
             {
-                string payload = "{\"message\":" + JsonConvert.ToString(eventMessages.WsResponseMessage) + "}";
+                string payload = "{\"message:\"" + JsonConvert.ToString(eventMessages.WsResponseMessage) + "}";
+                Send(payload);
+            });
+            
+            Messenger.Default.Register<StateUpdateMessage>(this, (StateUpdateMessage stateUpdateMessage) =>
+            {
+                string payload = "{\"response\":\"statusUpdate\", \"status\":" + JsonConvert.SerializeObject(stateUpdateMessage.state) + "}";
+                Send(payload);
+            });
+
+            Messenger.Default.Register<BroadcastMessage>(this, (BroadcastMessage broadcastMessage) =>
+            {
+                string payload = "{\"response\":\"broadcast\", \"message\":" + JsonConvert.SerializeObject(broadcastMessage.message)
+                                 + ", \"options\":" + JsonConvert.SerializeObject(broadcastMessage.options) + 
+                                 "}";
                 Send(payload);
             });
         }
@@ -37,16 +51,25 @@ namespace PowerSocketServer.Logic
                     response = "{\"action\":\"authenticate\", \"authenticated\": 1}";
                     break;
                 case Message.NEXT_SLIDE:
-                    // TODO respond with state update
                     response = "{\"action\":\"ok\"}";
                     Main.api.NextSlide();
                     break;
                 case Message.PREV_SLIDE:
-                    // TODO respond with state update
                     response = "{\"action\":\"ok\"}";
                     Main.api.PrevSlide();
                     break;
-                
+                case Message.SYNC:
+                    response = "{\"action\":\"ok\"}";
+                    Main.api.SyncState();
+                    break; 
+                case Message.BROADCAST:
+                    response = "{\"action\":\"ok\"}";
+                    Messenger.Default.Send(new BroadcastMessage()
+                    {
+                        message = jsonData["message"].ToString(),
+                        options = jsonData["options"]
+                    });
+                    break; 
                 default:
                     break;
             

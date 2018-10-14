@@ -7,6 +7,7 @@ using NetOffice.PowerPointApi;
 using static PowerSocketServer.Helpers.BitmapHelpers;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace PowerSocketServer.Logic
 {
@@ -17,6 +18,11 @@ namespace PowerSocketServer.Logic
         public PowerPointApi(NetOffice.PowerPointApi.Application pptInstance)
         {
             Connect(pptInstance);
+
+            Messenger.Default.Register<powerpointApiSyncSlides>(this, (aa) =>
+            {
+                ExportSlides();
+            });
         }
 
         private void Connect(NetOffice.PowerPointApi.Application pptInstance)
@@ -24,10 +30,13 @@ namespace PowerSocketServer.Logic
             this._pptInstance = pptInstance;
             // Dispose any existing event listener and re-register with this ppt instance
             EventListener eventListener = new EventListener();
-            eventListener.PowerPointSlideChangedEvent += (o, args) => SyncState();
-            eventListener.PowerPointPresentationOpenEvent += (o, args) => ExportSlides();
+            eventListener.SlideNavigatedEvent += (o, args) => SyncState();
+            eventListener.ContentChangedEvent += (o, args) => ExportSlides();
             
             eventListener.RegisterPowerPointInstance(this._pptInstance);
+
+            SyncState();
+            ExportSlides();
         }
 
         // Methods
@@ -93,40 +102,67 @@ namespace PowerSocketServer.Logic
 
             SyncState();
         }
-
-        public void ExportSlides()
+        private readonly object syncSlidesLock = new object();
+        public async void ExportSlides()
         {
-            var temp = PowerSocketServer.Helpers.TempDir.GetTempDirPath();
+        
 
-            System.IO.Directory.CreateDirectory(temp);
-            System.IO.DirectoryInfo di = new DirectoryInfo(temp);
+            await Task.Run(() =>
+            {
+                lock (syncSlidesLock)
+                {
 
-            foreach (FileInfo file in di.GetFiles())
-            {
-                file.Delete(); 
-            }
-            foreach (DirectoryInfo dir in di.GetDirectories())
-            {
-                dir.Delete(true); 
-            }
+                    Messenger.Default.Send(new SetIsExportingSlides() { IsExportingSlides = true });
 
-            if (state.presentation == null)
-            {
-                return;
-            }
+                    var temp = PowerSocketServer.Helpers.TempDir.GetTempDirPath();
 
-            foreach (Slide slide in state.presentation.Slides)
-            {
-                // TODO 1080p
-                slide.Export(System.IO.Path.Combine(temp, $"slide_{slide.SlideIndex}.png"), "PNG", 1024, 768);
-            }
+                    System.IO.Directory.CreateDirectory(temp);
+                    System.IO.DirectoryInfo di = new DirectoryInfo(temp);
+
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete(); 
+                    }
+                    foreach (DirectoryInfo dir in di.GetDirectories())
+                    {
+                        dir.Delete(true); 
+                    }
+
+                    if (state.presentation == null)
+                    {
+                        Messenger.Default.Send(new SetIsExportingSlides() { IsExportingSlides = false });
+                        Debug.Print("Slides sync failed. No active presentation");
+                        return;
+                    }
+
+                    foreach (Slide slide in state.presentation.Slides)
+                    {
+                        // TODO lower resolution
+                        float slideHeight = state.presentation.PageSetup.SlideHeight;
+                        float slideWidth = state.presentation.PageSetup.SlideWidth;
+                
+                        slide.Export(System.IO.Path.Combine(temp, $"slide_{slide.SlideIndex}.png"), "PNG", slideWidth, slideHeight);
+                        double progress = ((double) (slide.SlideIndex + 1) / (state.presentation.Slides.Count) * 100);
+                        Messenger.Default.Send(new SetIsExportingSlides() { IsExportingSlides = true, Progress = (int) progress });
+                    }
+
+                    Messenger.Default.Send(new ResponseMessage() { WsResponseMessage = "Sync Success" });
+                    Messenger.Default.Send(new SetIsExportingSlides() { IsExportingSlides = false });
+
+
+                }   
+                
+            
+
+
+            });
         }
 
         // Event listeners
         private class EventListener
         {
-            public event EventHandler PowerPointSlideChangedEvent;  
-            public event EventHandler PowerPointPresentationOpenEvent; 
+            public event EventHandler SlideNavigatedEvent;  
+            public event EventHandler ContentChangedEvent; 
             public void RegisterPowerPointInstance(NetOffice.PowerPointApi.Application pptInstance)
             {
                 if (pptInstance == null)
@@ -136,26 +172,26 @@ namespace PowerSocketServer.Logic
                 }
 
                 // Content changed
-                pptInstance.AfterPresentationOpenEvent += (pres) => OnRaisePresentationOpenEvent(EventArgs.Empty);
-                pptInstance.SlideShowBeginEvent += (pres) => OnRaisePresentationOpenEvent(EventArgs.Empty);
+                pptInstance.AfterPresentationOpenEvent += (pres) => OnRaiseContentChangedEvent(EventArgs.Empty);
+                //pptInstance.SlideShowBeginEvent += (pres) => OnRaiseContentChangedEvent(EventArgs.Empty);
 
                 // Slide changed
-                pptInstance.SlideSelectionChangedEvent += range => OnRaiseCustomEvent(EventArgs.Empty);
-                pptInstance.SlideShowOnNextEvent += wn => OnRaiseCustomEvent(EventArgs.Empty);
-                pptInstance.SlideShowOnPreviousEvent += wn => OnRaiseCustomEvent(EventArgs.Empty);
-                pptInstance.SlideShowNextBuildEvent += wn => OnRaiseCustomEvent(EventArgs.Empty);
-                pptInstance.SlideShowNextClickEvent += (wn, effect) => OnRaiseCustomEvent(EventArgs.Empty);
-                pptInstance.SlideShowNextSlideEvent += wn => OnRaiseCustomEvent(EventArgs.Empty);
+                pptInstance.SlideSelectionChangedEvent += range => OnRaiseSlideNavigatedEvent(EventArgs.Empty);
+                pptInstance.SlideShowOnNextEvent += wn => OnRaiseSlideNavigatedEvent(EventArgs.Empty);
+                pptInstance.SlideShowOnPreviousEvent += wn => OnRaiseSlideNavigatedEvent(EventArgs.Empty);
+                pptInstance.SlideShowNextBuildEvent += wn => OnRaiseSlideNavigatedEvent(EventArgs.Empty);
+                pptInstance.SlideShowNextClickEvent += (wn, effect) => OnRaiseSlideNavigatedEvent(EventArgs.Empty);
+                pptInstance.SlideShowNextSlideEvent += wn => OnRaiseSlideNavigatedEvent(EventArgs.Empty);
             }
 
             // Wrap event invocations inside a protected virtual method
             // to allow derived classes to override the event invocation behavior
-            protected virtual void OnRaiseCustomEvent(EventArgs e)
+            protected virtual void OnRaiseSlideNavigatedEvent(EventArgs e)
             {
                 // Make a temporary copy of the event to avoid possibility of
                 // a race condition if the last subscriber unsubscribes
                 // immediately after the null check and before the event is raised.
-                EventHandler handler = PowerPointSlideChangedEvent;
+                EventHandler handler = SlideNavigatedEvent;
 
                 // Event will be null if there are no subscribers
                 if (handler != null)
@@ -165,12 +201,12 @@ namespace PowerSocketServer.Logic
                 }
             }
 
-            protected virtual void OnRaisePresentationOpenEvent(EventArgs e)
+            protected virtual void OnRaiseContentChangedEvent(EventArgs e)
             {
                 // Make a temporary copy of the event to avoid possibility of
                 // a race condition if the last subscriber unsubscribes
                 // immediately after the null check and before the event is raised.
-                EventHandler handler = PowerPointPresentationOpenEvent;
+                EventHandler handler = ContentChangedEvent;
 
                 // Event will be null if there are no subscribers
                 if (handler != null)
@@ -326,7 +362,7 @@ namespace PowerSocketServer.Logic
         /**
          * Update state from PowerPoint instance
          */
-        private void SyncState()
+        public void SyncState()
         {
             //? retry Connect
             //Connect(); 

@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Exception = System.Exception;
 
 namespace PowerSocketServer.Logic
 {
@@ -72,7 +73,16 @@ namespace PowerSocketServer.Logic
                         if (path.StartsWith("/slides/"))
                         {
                             path = path.Replace("/slides/", "");
-                            bytes = File.ReadAllBytes(System.IO.Path.Combine( Helpers.TempDir.GetTempDirPath(), path));
+                            try
+                            {
+                                bytes = File.ReadAllBytes(
+                                    System.IO.Path.Combine(Helpers.TempDir.GetTempDirPath(), path));
+                            }
+                            catch (Exception e)
+                            {
+                                content = "404";
+                            }
+                            
                         }
                         else
                         {
@@ -175,18 +185,33 @@ namespace PowerSocketServer.Logic
                         
                         if (bytes != null)
                         {
-                            writer.Write("Content-Length: " + bytes.Length);
-                            writer.Write(Environment.NewLine);
-                            writer.Write(Environment.NewLine);
-                            writer.Flush();
-                            writer.BaseStream.Write(bytes, 0, bytes.Length);
+                            try
+                            {
+                                writer.Write("Content-Length: " + bytes.Length);
+                                writer.Write(Environment.NewLine);
+                                writer.Write(Environment.NewLine);
+                                writer.Flush();
+                                writer.BaseStream.Write(bytes, 0, bytes.Length);
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+                            
                         }
                         else
                         {
-                            writer.Write("Content-Length: " + str.Length);
-                            writer.Write(Environment.NewLine);
-                            writer.Write(Environment.NewLine);
-                            writer.Write(str);
+                            try
+                            {
+                                writer.Write("Content-Length: " + str.Length);
+                                writer.Write(Environment.NewLine);
+                                writer.Write(Environment.NewLine);
+                                writer.Write(str);
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
                         }
                     }
                 }

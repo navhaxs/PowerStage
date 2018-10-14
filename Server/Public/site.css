@@ -11,12 +11,24 @@ body {
 }
 
 /* buttons */
+#nextActionButton {
+  background-color: #00A3D9
+}
+
 #nextActionButton,
 #prevActionButton,
 #blankActionButton {
   font-size: 18px;
   padding: 1.2em 0.4em;
   background-color: #008CBA;
+}
+
+#nextActionButton:hover,
+#prevActionButton:hover,
+#blankActionButton:hover {
+  font-size: 18px;
+  padding: 1.2em 0.4em;
+  background-color: rgb(0, 191, 255);
 }
 
 #blankActionButton {
@@ -140,9 +152,9 @@ body {
 #status {
   width: 100%;
   font-weight: bold;
-  bottom: 0;
+  top: 0;
   left: 0;
-  position: absolute;
+  display: block;
   box-sizing: border-box;
   padding: 5px 0 5px 5px;
 }
