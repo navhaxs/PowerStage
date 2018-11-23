@@ -128,10 +128,10 @@ namespace PowerSocketServer.Logic
                         dir.Delete(true); 
                     }
 
-                    if (state.presentation == null)
+                    if (state.presentation == null || state.presentation.Slides == null)
                     {
                         Messenger.Default.Send(new SetIsExportingSlides() { IsExportingSlides = false });
-                        Debug.Print("Slides sync failed. No active presentation");
+                        Debug.Print("Slides sync failed. No active presentation/slides available");
                         return;
                     }
 
