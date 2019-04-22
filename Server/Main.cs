@@ -1,4 +1,5 @@
 ﻿using PowerSocketServer.Logic;
+using PowerSocketServer.Logic.HTTP;
 using WebSocketSharp.Server;
 
 namespace PowerSocketServer
@@ -7,7 +8,7 @@ namespace PowerSocketServer
     {
         public static Logic.PowerPointApi api = new Logic.PowerPointApi(NetOffice.PowerPointApi.Application.GetActiveInstance());
         public static WebSocketServer wsServer;
-        public static SimpleHTTPServer httpServer;
-        public static TcpHttpServer tcpHttpServer;
+        //public static SimpleHTTPServer httpServer;
+        public static IAbstractHttpServer httpServer;
     }
 }

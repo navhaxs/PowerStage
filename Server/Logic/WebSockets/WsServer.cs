@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using PowerSocketServer.Models;
 using System;
 using System.Collections.Generic;
-using Nancy.Json;
+//using Nancy.Json;
 using System.Diagnostics;
 using WebSocketSharp;
 using WebSocketSharp.Server;
@@ -16,25 +16,25 @@ namespace PowerSocketServer.Logic
 
         public WsServer()   
         {
-            Messenger.Default.Register<ResponseMessage>(this, (ResponseMessage eventMessages) =>
-            {
-                string payload = "{\"message:\"" + JsonConvert.ToString(eventMessages.WsResponseMessage) + "}";
-                Send(payload);
-            });
+            //Messenger.Default.Register<ResponseMessage>(this, (ResponseMessage eventMessages) =>
+            //{
+            //    string payload = "{\"message:\"" + JsonConvert.ToString(eventMessages.WsResponseMessage) + "}";
+            //    Send(payload);
+            //});
             
-            Messenger.Default.Register<StateUpdateMessage>(this, (StateUpdateMessage stateUpdateMessage) =>
-            {
-                string payload = "{\"response\":\"statusUpdate\", \"status\":" + JsonConvert.SerializeObject(stateUpdateMessage.state) + "}";
-                Send(payload);
-            });
+            //Messenger.Default.Register<StateUpdateMessage>(this, (StateUpdateMessage stateUpdateMessage) =>
+            //{
+            //    string payload = "{\"response\":\"statusUpdate\", \"status\":" + JsonConvert.SerializeObject(stateUpdateMessage.state) + "}";
+            //    Send(payload);
+            //});
 
-            Messenger.Default.Register<BroadcastMessage>(this, (BroadcastMessage broadcastMessage) =>
-            {
-                string payload = "{\"response\":\"broadcast\", \"message\":" + JsonConvert.SerializeObject(broadcastMessage.message)
-                                 + ", \"options\":" + JsonConvert.SerializeObject(broadcastMessage.options) + 
-                                 "}";
-                Send(payload);
-            });
+            //Messenger.Default.Register<BroadcastMessage>(this, (BroadcastMessage broadcastMessage) =>
+            //{
+            //    string payload = "{\"response\":\"broadcast\", \"message\":" + JsonConvert.SerializeObject(broadcastMessage.message)
+            //                     + ", \"options\":" + JsonConvert.SerializeObject(broadcastMessage.options) + 
+            //                     "}";
+            //    Send(payload);
+            //});
         }
 
         protected override void OnMessage (MessageEventArgs e)
@@ -67,7 +67,7 @@ namespace PowerSocketServer.Logic
                     Messenger.Default.Send(new BroadcastMessage()
                     {
                         message = jsonData["message"].ToString(),
-                        options = jsonData["options"]
+                        //options = jsonData["options"]
                     });
                     break; 
                 default:
@@ -88,21 +88,23 @@ namespace PowerSocketServer.Logic
                 { "SerializeMe", "GoOnThen"}
             };
 
-            var jsSerializer = new JavaScriptSerializer();
-
-            var serialized = jsSerializer.Serialize(columns);
-
-            string json = @"{
-  'Name': 'Bad Boys',
-  'ReleaseDate': '1995-4-7T00:00:00',
-  'Genres': [
-    'Action',
-    'Comedy'
-  ]
-}";
+            //var jsSerializer = new JavaScriptSerializer();
 
 
-            return "{\"action\":\"authenticate\", \"authenticated\": 1, \"response\":{\"state\":{\"total\":"+Main.api.GetStateInfo().totalSlidesCount+",\"current\":"+Main.api.GetStateInfo().currentSlideIndex+"}}}";
+            return null;
+//            var serialized = jsSerializer.Serialize(columns);
+
+//            string json = @"{
+//  'Name': 'Bad Boys',
+//  'ReleaseDate': '1995-4-7T00:00:00',
+//  'Genres': [
+//    'Action',
+//    'Comedy'
+//  ]
+//}";
+
+
+//            return "{\"action\":\"authenticate\", \"authenticated\": 1, \"response\":{\"state\":{\"total\":"+Main.api.GetStateInfo().totalSlidesCount+",\"current\":"+Main.api.GetStateInfo().currentSlideIndex+"}}}";
         }
     }
 }

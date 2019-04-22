@@ -7,6 +7,7 @@ using WebSocketSharp.Server;
 using PowerSocketServer.Models;
 using GalaSoft.MvvmLight.Messaging;
 using PowerSocketServer.ViewModels;
+using PowerSocketServer.Logic.HTTP;
 
 namespace Server
 {
@@ -35,11 +36,16 @@ namespace Server
             // Either replace this with a TcpListener, or launch (only) the SimpleHttpServer with elevation,
             // Or send it over websockets
 
-            //Main.httpServer = new SimpleHTTPServer(TempDir.GetTempDirPath(), 50003);
-            Main.tcpHttpServer = new TcpHttpServer();
-            mainViewModel.HttpPort = $"{Main.tcpHttpServer.GetAddress()}"; //Main.httpServer.Port.ToString() + " " +
-            mainViewModel.WiFiAddress = $"http://{string.Join(",", GetNetworkAddress.Fetch().ToArray())}:{Main.tcpHttpServer.GetPort()}";
 
+            // XXXXXXXX jeremy
+            //Main.httpServer = new SimpleHTTPServer(TempDir.GetTempDirPath(), 50003);
+            Main.httpServer = new EmbedioWebServer();
+            Main.httpServer.Start();
+            //mainViewModel.HttpPort = $"{Main.httpServer.GetAddress()}"; //Main.httpServer.Port.ToString() + " " +
+
+            var ipAddressArray = GetNetworkAddress.Fetch().ToArray();
+            var firstIpAddress = ipAddressArray[0];
+            mainViewModel.IpAddress = $"http://{firstIpAddress}:{Main.httpServer.getPort()}";
 
             // UI Events
             Messenger.Default.Register<StateUpdateMessage>(this, (StateUpdateMessage stateUpdateMessage) =>
@@ -60,7 +66,7 @@ namespace Server
 
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(String.Format("{0}", mainViewModel.WiFiAddress));
+            System.Diagnostics.Process.Start(String.Format("{0}", mainViewModel.IpAddress));
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)

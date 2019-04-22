@@ -13,7 +13,7 @@ namespace PowerSocketServer.ViewModels
 
         public string WebAddress { get; set; }
 
-        public string WiFiAddress { get; set; }
+        public string IpAddress { get; set; }
 
         private bool _IsExportingSlides;
         public bool IsExportingSlides
