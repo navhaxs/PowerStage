@@ -1,10 +1,7 @@
-// C:\Program Files (x86)\Renewed Vision\ProPresenter 6\ProPresenter.UI.Plugin.dll
-// ProPresenter.UI.Plugin.ProNetwork.RVProRemoteWebSocketServiceHandler
-
 const debug = false;
 const default_host = window.location.hostname;
-const default_control_port = '50003';
-const default_web_port = '50004';
+const default_control_port = '8977';
+const default_web_port = '8977';
 const default_pass = 'control';
 
 let socket;
@@ -30,8 +27,10 @@ function connect(obj) {
     obj.authSuccess && (cb_authSuccess = obj.authSuccess);
     obj.authFail && (cb_authFail = obj.authFail);
 
+    const params = new URLSearchParams(location.search);
+
     var host = localStorage.getItem("host") || default_host;
-    var port = localStorage.getItem("control_port") || default_control_port;
+    var port = params.get('port') || localStorage.getItem("control_port") || default_control_port;
     debug && console.log(`Connecting to ws://${host}:${port}/remote`);
     socket = new WebSocket(`ws://${host}:${port}/remote`);
     // Above operation is non-blocking. Have to wait for the socket to connect before we authenticate()
@@ -39,7 +38,12 @@ function connect(obj) {
     socket.onopen = function() {
         cb_connectSuccess && cb_connectSuccess();
         debug && console.log("Connection success, authenticating...");
-        authenticate()
+        authenticate();
+
+        updateUI({
+            currentSlideIndex: 1,
+            totalSlidesCount: 0
+        });
     };
     listen();
 }
@@ -52,6 +56,21 @@ function authenticate() {
     })
 }
 
+function updateUI(status) {
+    const { currentSlideIndex, totalSlidesCount } = status;
+
+    const params = new URLSearchParams(location.search);
+    var this_web_port = params.get('port') || localStorage.getItem("web_port") || default_web_port;
+    console.log(this_web_port);
+    var this_host = localStorage.getItem("host") || default_host;
+    var this_slide = "http://" + this_host + ":" + this_web_port + "/slides/slide_" + currentSlideIndex + ".png";
+    document.getElementById("slide").src = this_slide;
+    var next_slide = "http://" + this_host + ":" + this_web_port + "/slides/slide_" + (currentSlideIndex + 1) + ".png";
+    document.getElementById("nextslide").src = next_slide;
+    document.getElementById("currentSlideIndex").textContent = currentSlideIndex;
+    document.getElementById("totalSlidesCount").textContent = totalSlidesCount;
+}
+
 function listen() {
     socket.onmessage = function(event) {
         var msg = JSON.parse(event.data);
@@ -61,14 +80,7 @@ function listen() {
         // console.log(msg);
 
         if (msg.status) {
-            var this_web_port = localStorage.getItem("web_port") || default_web_port;
-            var this_host = localStorage.getItem("host") || default_host;
-            var this_slide = "http://" + this_host + ":" + this_web_port + "/slides/slide_" + msg.status.currentSlideIndex + ".png";
-            document.getElementById("slide").src = this_slide;
-            var next_slide = "http://" + this_host + ":" + this_web_port + "/slides/slide_" + (msg.status.currentSlideIndex + 1) + ".png";
-            document.getElementById("nextslide").src = next_slide;
-            document.getElementById("currentSlideIndex").textContent = msg.status.currentSlideIndex;
-            document.getElementById("totalSlidesCount").textContent = msg.status.totalSlidesCount;
+            updateUI(msg.status);
         }
 
 

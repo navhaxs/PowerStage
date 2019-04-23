@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Server"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Remote for PowerPoint"
+    Title="Web Remote for PowerPoint"
     Width="450"
     Height="750"
     MinWidth="450"
@@ -18,6 +18,9 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <converters:BoolToVisibilityConverter
+         x:Key="BoolToHiddenConverter"
+         TrueValue="Visible" FalseValue="Hidden" />
     </Window.Resources>
     <DockPanel>
         <Border Background="#FF5E4ECC" BorderBrush="#4b3ea3"  DockPanel.Dock="Top" BorderThickness="0,0,0,10">
@@ -27,7 +30,7 @@
                     Margin="15"
                     FontSize="16"
                     Foreground="White">
-                    Remote for PowerPoint
+                    Web Remote for PowerPoint
                 </TextBlock>
             </DockPanel>
         </Border>
@@ -72,7 +75,28 @@
                 
                     </TextBlock>
 
-                    <Border
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock
+                        FontSize="16"
+                        FontWeight="Medium"
+                        Foreground="#FF313131"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap"
+                                Padding="0 20">
+                        <Run FontSize="16" FontWeight="Bold">Connect from a phone, tablet or another PC</Run>
+                                <LineBreak />
+                        <Hyperlink Click="Hyperlink_Click">
+                            <Run Text="{Binding IpAddress, FallbackValue='http://localhost:8977'}" />
+                        </Hyperlink>
+                            </TextBlock>
+
+                            <Viewbox MaxHeight="160">
+                            <Border CornerRadius="15" BorderThickness="20" BorderBrush="#5e4ecc" Background="White">
+                                    <Views:QRCode URL="{Binding IpAddress, FallbackValue='http://localhost:8977'}" />
+                                </Border>
+                            </Viewbox>
+                        </StackPanel>
+                    <!--<Border
                 Padding="15,20"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
@@ -80,40 +104,10 @@
                 BorderBrush="#FFCC4E4E"
                 BorderThickness="2"
                 CornerRadius="25 25 25 0">
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock
-                        FontSize="16"
-                        FontWeight="Medium"
-                        Foreground="#FF313131"
-                        TextAlignment="Center"
-                        TextWrapping="Wrap">
-                        <Run FontSize="16" FontWeight="Bold">Connect from a phone, tablet or another PC</Run>
-                        <Hyperlink Click="Hyperlink_Click">
-                            <Run Text="{Binding IpAddress, FallbackValue='xxxxxxxxxxxx'}" />
-                        </Hyperlink>
-                            </TextBlock>
 
-                            <Viewbox MaxHeight="160">
-                                <Views:QRCode />
-                            </Viewbox>
-                        </StackPanel>
-                    </Border>
+                    </Border>-->
 
-
-                    <TextBlock
-                Margin="0,40,0,10"
-                HorizontalAlignment="Center"
-                Foreground="#FFA8A8A8"
-                TextAlignment="Center"
-                TextWrapping="Wrap">
-                Debug webserver port=<Hyperlink Click="Hyperlink_Click">
-                    <Run Text="{Binding HttpPort, FallbackValue='not started'}" />
-                </Hyperlink>
-                <LineBreak />
-                Debug info=<Run Text="{Binding DebugOutput}" />
-                    </TextBlock>
-
-                    <StackPanel Margin="40,20" Visibility="{Binding IsExportingSlides, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel Margin="40,20" Visibility="{Binding IsExportingSlides, Converter={StaticResource BoolToHiddenConverter}}">
                         <TextBlock>Generating slide thumbnails...</TextBlock>
                         <ProgressBar Height="10" Value="{Binding Progress}" />
                     </StackPanel>

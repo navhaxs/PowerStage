@@ -27,9 +27,9 @@ namespace Server
             
             //System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
 
-            Main.wsServer = new WebSocketServer(50003);
-            Main.wsServer.AddWebSocketService<PowerSocketServer.Logic.WsServer> ("/remote");
-            Main.wsServer.Start();
+            //Main.wsServer = new WebSocketServer(50003);
+            //Main.wsServer.AddWebSocketService<PowerSocketServer.Logic.WsServerOld> ("/remote");
+            //Main.wsServer.Start();
             mainViewModel.WebAddress = string.Join(",", NetworkAddress.GetLocalIPAddress()); //Main.wsServer.Address.ToString();
 
             // @jeremy TODO this must be run as admin due to Windows http.sys ACL
@@ -50,7 +50,7 @@ namespace Server
             // UI Events
             Messenger.Default.Register<StateUpdateMessage>(this, (StateUpdateMessage stateUpdateMessage) =>
             {
-                mainViewModel.DebugOutput = stateUpdateMessage.state.ToString();
+                //mainViewModel.DebugOutput = stateUpdateMessage.state.ToString();
             });
         }
 

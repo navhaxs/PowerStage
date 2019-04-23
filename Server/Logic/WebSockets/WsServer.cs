@@ -1,110 +1,122 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using Newtonsoft.Json;
-using PowerSocketServer.Models;
-using System;
-using System.Collections.Generic;
-//using Nancy.Json;
-using System.Diagnostics;
-using WebSocketSharp;
-using WebSocketSharp.Server;
-using Newtonsoft.Json.Linq;
-
-namespace PowerSocketServer.Logic
+﻿namespace PowerSocketServer.Logic.WebSockets
 {
-    class WsServer : WebSocketBehavior
+    using GalaSoft.MvvmLight.Messaging;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+    using PowerSocketServer.Models;
+    using System.Linq;
+    using Unosquare.Labs.EmbedIO;
+    using Unosquare.Labs.EmbedIO.Modules;
+    using Unosquare.Swan;
+
+    /// <inheritdoc />
+    /// <summary>
+    /// Defines a very simple chat server
+    /// </summary>
+    [WebSocketHandler("/remote")]
+    public class WsServer : WebSocketsServer
     {
-
-        public WsServer()   
+        public WsServer()
+            : base(true)
         {
-            //Messenger.Default.Register<ResponseMessage>(this, (ResponseMessage eventMessages) =>
-            //{
-            //    string payload = "{\"message:\"" + JsonConvert.ToString(eventMessages.WsResponseMessage) + "}";
-            //    Send(payload);
-            //});
-            
-            //Messenger.Default.Register<StateUpdateMessage>(this, (StateUpdateMessage stateUpdateMessage) =>
-            //{
-            //    string payload = "{\"response\":\"statusUpdate\", \"status\":" + JsonConvert.SerializeObject(stateUpdateMessage.state) + "}";
-            //    Send(payload);
-            //});
+            // placeholder
 
-            //Messenger.Default.Register<BroadcastMessage>(this, (BroadcastMessage broadcastMessage) =>
-            //{
-            //    string payload = "{\"response\":\"broadcast\", \"message\":" + JsonConvert.SerializeObject(broadcastMessage.message)
-            //                     + ", \"options\":" + JsonConvert.SerializeObject(broadcastMessage.options) + 
-            //                     "}";
-            //    Send(payload);
-            //});
+            Messenger.Default.Register<ResponseMessage>(this, (ResponseMessage eventMessages) =>
+            {
+                string payload = "{\"message:\"" + JsonConvert.ToString(eventMessages.WsResponseMessage) + "}";
+                Broadcast(payload);
+            });
+
+            Messenger.Default.Register<StateUpdateMessage>(this, (StateUpdateMessage stateUpdateMessage) =>
+            {
+                string payload = "{\"response\":\"statusUpdate\", \"status\":" + JsonConvert.SerializeObject(stateUpdateMessage.state) + "}";
+                Broadcast(payload);
+            });
+
+            Messenger.Default.Register<BroadcastMessage>(this, (BroadcastMessage broadcastMessage) =>
+            {
+                string payload = "{\"response\":\"broadcast\", \"message\":" + JsonConvert.SerializeObject(broadcastMessage.message)
+                                 + ", \"options\":" + JsonConvert.SerializeObject(broadcastMessage.options) +
+                                 "}";
+                Broadcast(payload);
+            });
         }
 
-        protected override void OnMessage (MessageEventArgs e)
+        /// <inheritdoc />
+        protected override void OnMessageReceived(IWebSocketContext context, byte[] rxBuffer,
+            IWebSocketReceiveResult rxResult)
         {
-            string response = "{\"error\":\"bad request\"}";
 
-            Debug.Print(e.Data);
-
-            JObject jsonData = JObject.Parse(e.Data);
+            // parse message
+            JObject jsonData = JObject.Parse(rxBuffer.ToText());
 
             switch (jsonData["action"].ToString())
             {
                 case Message.AUTHENTICATE:
-                    response = "{\"action\":\"authenticate\", \"authenticated\": 1}";
+                    Send(context, "{\"action\":\"authenticate\", \"authenticated\": 1}");
                     break;
                 case Message.NEXT_SLIDE:
-                    response = "{\"action\":\"ok\"}";
+                    Send(context, "{\"action\":\"ok\"}");
                     Main.api.NextSlide();
                     break;
                 case Message.PREV_SLIDE:
-                    response = "{\"action\":\"ok\"}";
+                    Send(context, "{\"action\":\"ok\"}");
                     Main.api.PrevSlide();
                     break;
                 case Message.SYNC:
-                    response = "{\"action\":\"ok\"}";
+                    Send(context, "{\"action\":\"ok\"}");
                     Main.api.SyncState();
-                    break; 
+                    break;
                 case Message.BROADCAST:
-                    response = "{\"action\":\"ok\"}";
+                    Send(context, "{\"action\":\"ok\"}");
+
                     Messenger.Default.Send(new BroadcastMessage()
                     {
                         message = jsonData["message"].ToString(),
                         //options = jsonData["options"]
                     });
-                    break; 
+                    break;
                 default:
                     break;
-            
+
             }
 
-            Send(response);
+            //// send to all connected clients
+            //foreach (var ws in WebSockets.Where(ws => ws != context))
+            //{
+            //    Send(ws, rxBuffer.ToText());
+            //}
         }
 
-        private string stateToJson()
+
+        /// <inheritdoc />
+        public override string ServerName => nameof(WsServer);
+
+        /// <inheritdoc />
+        protected override void OnClientConnected(
+            IWebSocketContext context,
+            System.Net.IPEndPoint localEndPoint,
+            System.Net.IPEndPoint remoteEndPoint)
         {
-            var columns = new Dictionary<string, string>
+            Send(context, "Welcome to the chat room!");
+
+            foreach (var ws in WebSockets.Where(ws => ws != context))
             {
-                { "FirstName", "Mathew"},
-                { "Surname", "Thompson"},
-                { "Gender", "Male"},
-                { "SerializeMe", "GoOnThen"}
-            };
+                Send(ws, "Someone joined the chat room.");
+            }
+        }
 
-            //var jsSerializer = new JavaScriptSerializer();
+        /// <inheritdoc />
+        protected override void OnFrameReceived(IWebSocketContext context, byte[] rxBuffer,
+            IWebSocketReceiveResult rxResult)
+        {
+            // placeholder
+        }
 
-
-            return null;
-//            var serialized = jsSerializer.Serialize(columns);
-
-//            string json = @"{
-//  'Name': 'Bad Boys',
-//  'ReleaseDate': '1995-4-7T00:00:00',
-//  'Genres': [
-//    'Action',
-//    'Comedy'
-//  ]
-//}";
-
-
-//            return "{\"action\":\"authenticate\", \"authenticated\": 1, \"response\":{\"state\":{\"total\":"+Main.api.GetStateInfo().totalSlidesCount+",\"current\":"+Main.api.GetStateInfo().currentSlideIndex+"}}}";
+        /// <inheritdoc />
+        protected override void OnClientDisconnected(IWebSocketContext context)
+        {
+            Broadcast("Someone left the chat room.");
         }
     }
 }

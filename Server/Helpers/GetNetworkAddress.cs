@@ -21,6 +21,7 @@ namespace PowerSocketServer.Helpers
         {
             return NetworkInterface
                 .GetAllNetworkInterfaces()
+                .Where(i => i.GetIPProperties().GatewayAddresses.Count > 0)
                 .Where(i => i.NetworkInterfaceType == NetworkInterfaceType.Wireless80211) //||i.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
                 .SelectMany(i => i.GetIPProperties().UnicastAddresses)
                 .Where(a => a.Address.AddressFamily == AddressFamily.InterNetwork)

@@ -10,12 +10,20 @@
     <script type="application/javascript" src="./screenfull.min.js" defer></script>
     <script type="application/javascript" src="./site.js" defer></script>
     <link rel="stylesheet" href="./tachyons.min.css"/>
+
+    <!-- Chrome Android, iOS fullscreen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#333333">
+
   </head>
   <body>
     <span id="status"></span>
     <button id="pref_open">Settings</button>
-    <img id="slide" src="/slides/slide_1.png" />
-    <img id="nextslide" src="/slides/slide_2.png" />
+
+    <img id="slide" src="/placeholder.png" />
+    <img id="nextslide" src="/placeholder.png" />
+    
     <div id="controls">
 
       <div><span id="currentSlideIndex"></span>/<span id="totalSlidesCount"></span></div>

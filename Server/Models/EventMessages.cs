@@ -1,4 +1,5 @@
-﻿using static PowerSocketServer.Logic.PowerPointApi;
+﻿using Newtonsoft.Json.Linq;
+using static PowerSocketServer.Logic.PowerPointServer;
 
 namespace PowerSocketServer.Models
 {
@@ -17,7 +18,7 @@ namespace PowerSocketServer.Models
     class BroadcastMessage
     {
         public string message { get; set; }
-        //public JToken options { get; set; }
+        public JToken options { get; set; }
     }
 
     // Out from powerpointapi

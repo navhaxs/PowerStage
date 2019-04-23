@@ -14,48 +14,9 @@ namespace PowerSocketServer.ViewModels
         public string WebAddress { get; set; }
 
         public string IpAddress { get; set; }
+        public bool IsExportingSlides { get; set; }
 
-        private bool _IsExportingSlides;
-        public bool IsExportingSlides
-        {
-            get
-            {
-                return _IsExportingSlides;
-            }
-            set
-            {
-                _IsExportingSlides = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private double _Progress;
-        public double Progress
-        {
-            get
-            {
-                return _Progress;
-            }
-            set
-            {
-                _Progress = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _DebugOutput;
-        public string DebugOutput
-        {
-            get
-            {
-                return _DebugOutput;
-            }
-            set
-            {
-                _DebugOutput = value;
-                OnPropertyChanged();
-            }
-        }
+        public double Progress { get; set; }
 
         public MainViewModel()
         {

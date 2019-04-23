@@ -12,6 +12,7 @@ using Unosquare.Swan;
 using Unosquare.Labs.EmbedIO;
 using Unosquare.Labs.EmbedIO.Modules;
 using System.Collections.Generic;
+using PowerSocketServer.Logic.WebSockets;
 
 namespace PowerSocketServer.Logic.HTTP
 {
@@ -55,16 +56,17 @@ namespace PowerSocketServer.Logic.HTTP
 
                 // Register /slides/ route
                 // TODO: HACK remote / route
+                // TODO: Secure file access
                 server.RegisterModule(new StaticFilesModule(Helpers.TempDir.GetTempDirPath(), null, new Dictionary<string, string> { { "/slides/", Helpers.TempDir.GetTempDirPath() } }, true));
 
                 //// Register the Web Api Module. See the Setup method to find out how to do it
                 //// It registers the WebApiModule and registers the controller(s) -- that's all.
                 //server.WithWebApiController<PeopleController>(true);
 
-                //// Register the WebSockets module. See the Setup method to find out how to do it
-                //// It registers the WebSocketsModule and registers the server for the given paths(s)
-                //server.RegisterModule(new WebSocketsModule());
-                //server.Module<WebSocketsModule>().RegisterWebSocketsServer<WebSocketsChatServer>();
+                // Register the WebSockets module. See the Setup method to find out how to do it
+                // It registers the WebSocketsModule and registers the server for the given paths(s)
+                server.RegisterModule(new WebSocketsModule());
+                server.Module<WebSocketsModule>().RegisterWebSocketsServer<WsServer>();
                 //server.Module<WebSocketsModule>().RegisterWebSocketsServer<WebSocketsTerminalServer>();
 
                 server.RegisterModule(new FallbackModule((ctx, ct) => ctx.JsonResponseAsync(new { Message = "Error" }, ct)));
@@ -90,7 +92,7 @@ namespace PowerSocketServer.Logic.HTTP
 
         public void Stop()
         {
-
+            
         }
     }
 }
