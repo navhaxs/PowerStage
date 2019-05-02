@@ -16,13 +16,12 @@ namespace PowerSocketServer.Helpers
             return IPAddressRange.Parse(RFC3927_LINK_LOCAL).Contains(ipAddress);
         }
 
-
-    public static List<string> Fetch()
+        public static List<string> Fetch()
         {
             return NetworkInterface
                 .GetAllNetworkInterfaces()
                 .Where(i => i.GetIPProperties().GatewayAddresses.Count > 0)
-                .Where(i => i.NetworkInterfaceType == NetworkInterfaceType.Wireless80211) //||i.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+                .Where(i => i.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || i.NetworkInterfaceType == NetworkInterfaceType.GigabitEthernet || i.NetworkInterfaceType == NetworkInterfaceType.Ethernet || i.NetworkInterfaceType == NetworkInterfaceType.FastEthernetT) //||i.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
                 .SelectMany(i => i.GetIPProperties().UnicastAddresses)
                 .Where(a => a.Address.AddressFamily == AddressFamily.InterNetwork)
                 .Where(a => !IsLinkLocalAddress(a.Address))
