@@ -18,17 +18,26 @@ namespace PowerSocketServer.ViewModels
 
         public double Progress { get; set; }
 
+        public string PresentationName { get; set; }
+
         public MainViewModel()
         {
-            Messenger.Default.Register(this, (SetIsExportingSlides isExportingSlide) =>
+            Messenger.Default.Register(this, (SetIsExportingSlides exportingSlideState) =>
                 {
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
-                        IsExportingSlides = isExportingSlide.IsExportingSlides;
-                        Progress = isExportingSlide.Progress;
-                        /* Your code here */
+                        IsExportingSlides = exportingSlideState.IsExportingSlides;
+                        Progress = exportingSlideState.Progress;
                     }));
                 });
+
+            Messenger.Default.Register(this, (StateUpdateMessage stateUpdateMessage) =>
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    PresentationName = stateUpdateMessage.state.presentationName;
+                }));
+            });
         }
     }
 }

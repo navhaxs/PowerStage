@@ -13,6 +13,7 @@
     MinHeight="750"
     Background="#faf5fd"
     Closing="Window_Closing"
+    Loaded="Window_Loaded"
     FontSize="14"
     mc:Ignorable="d">
     <Window.Resources>
@@ -110,6 +111,10 @@
                     <StackPanel Margin="40,20" Visibility="{Binding IsExportingSlides, Converter={StaticResource BoolToHiddenConverter}}">
                         <TextBlock>Generating slide thumbnails...</TextBlock>
                         <ProgressBar Height="10" Value="{Binding Progress}" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0 20" HorizontalAlignment="Center">
+                        <TextBlock TextWrapping="Wrap">Active presentation: <Run Text="{Binding PresentationName, FallbackValue='None'}" /></TextBlock>
                     </StackPanel>
 
                 </StackPanel>

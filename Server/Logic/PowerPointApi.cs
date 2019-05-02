@@ -26,9 +26,17 @@ namespace PowerSocketServer.Logic
 
             Connect(pptInstance);
 
+            // Actions to handle, as defined in EventMessages:
+
             Messenger.Default.Register<powerpointApiSyncSlides>(this, (aa) =>
             {
+                SyncState();
                 ExportSlides();
+            });
+
+            Messenger.Default.Register<powerpointApiSync>(this, (aa) =>
+            {
+                SyncState();
             });
         }
 
@@ -38,8 +46,12 @@ namespace PowerSocketServer.Logic
             // Dispose any existing event listener and re-register with this ppt instance
             EventListener eventListener = new EventListener();
             eventListener.SlideNavigatedEvent += (o, args) => SyncState();
-            eventListener.ContentChangedEvent += (o, args) => ExportSlides();
-
+            eventListener.ContentChangedEvent += (o, args) =>
+            {
+                ExportSlides();
+                // TODO: Notify clients via a websocket message
+            };
+            
             eventListener.RegisterPowerPointInstance(this._pptInstance);
 
             SyncState();
@@ -209,6 +221,7 @@ namespace PowerSocketServer.Logic
 
                 // Content changed
                 pptInstance.AfterPresentationOpenEvent += (pres) => OnRaiseContentChangedEvent(EventArgs.Empty);
+                pptInstance.AfterPresentationOpenEvent += (pres) => OnRaiseContentChangedEvent(EventArgs.Empty);
                 //pptInstance.SlideShowBeginEvent += (pres) => OnRaiseContentChangedEvent(EventArgs.Empty);
 
                 // Slide changed
@@ -351,7 +364,11 @@ namespace PowerSocketServer.Logic
                         }
 
                         // Get Slide count
-                        info = new StateInfo() { totalSlidesCount = slides.Count, currentSlideIndex = slide != null ? slide.SlideIndex : -1 };
+                        info = new StateInfo() {
+                            presentationName = pptInstance.ActivePresentation.Name,
+                            totalSlidesCount = slides.Count,
+                            currentSlideIndex = slide != null ? slide.SlideIndex : -1
+                        };
                     }
                 }
                 catch
@@ -383,6 +400,8 @@ namespace PowerSocketServer.Logic
 
         public class StateInfo
         {
+            public string presentationName { get; set; }
+
             public int totalSlidesCount { get; set; }
             public int currentSlideIndex { get; set; }
 

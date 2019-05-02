@@ -28,8 +28,13 @@ namespace PowerSocketServer.Models
         public double Progress { get; set; }
     }
 
-    // In to powerpointapi
+    // Actions to dispatch in powerpointapi
     class powerpointApiSyncSlides
+    {
+
+    }
+
+    class powerpointApiSync
     {
 
     }

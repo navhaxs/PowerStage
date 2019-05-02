@@ -83,5 +83,10 @@ namespace Server
         {
             Messenger.Default.Send(new powerpointApiSyncSlides());
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Messenger.Default.Send(new powerpointApiSync());
+        }
     }
 }
