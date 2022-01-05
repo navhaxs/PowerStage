@@ -46,7 +46,7 @@
                 Margin="10"
                 Foreground="#FFA8A8A8"
                 TextAlignment="Right">
-                © Jeremy Wong 2018</TextBlock>
+                © Jeremy Wong 2018-2022</TextBlock>
                 </Grid>
 
                 <DockPanel DockPanel.Dock="Bottom">

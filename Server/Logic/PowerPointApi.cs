@@ -196,7 +196,14 @@ namespace PowerSocketServer.Logic
                             float slideHeight = state.presentation.PageSetup.SlideHeight;
                             float slideWidth = state.presentation.PageSetup.SlideWidth;
 
-                            slide.Export(System.IO.Path.Combine(temp, $"slide_{slide.SlideIndex}.png"), "PNG", slideWidth, slideHeight);
+                            try
+                            {
+                                slide.Export(System.IO.Path.Combine(temp, $"slide_{slide.SlideIndex}.png"), "PNG", slideWidth, slideHeight);
+                            }
+                            catch (Exception e)
+                            {
+                                System.Diagnostics.Debug.Print(e.ToString());
+                            }
                             double progress = ((double)(slide.SlideIndex + 1) / (state.presentation.Slides.Count) * 100);
                             Messenger.Default.Send(new SetIsExportingSlides() { IsExportingSlides = true, Progress = (int)progress });
                         }
