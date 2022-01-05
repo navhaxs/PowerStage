@@ -23,7 +23,7 @@
 
             Messenger.Default.Register<ResponseMessage>(this, (ResponseMessage eventMessages) =>
             {
-                string payload = "{\"message:\"" + JsonConvert.ToString(eventMessages.WsResponseMessage) + "}";
+                string payload = "{\"message\": " + JsonConvert.ToString(eventMessages.WsResponseMessage) + "}";
                 Broadcast(payload);
             });
 
