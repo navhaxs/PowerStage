@@ -8,6 +8,7 @@ using static PowerSocketServer.Helpers.BitmapHelpers;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using PowerSocketServer.Utils;
 
 namespace PowerSocketServer.Logic
 {
@@ -17,15 +18,6 @@ namespace PowerSocketServer.Logic
 
         public PowerPointServer()
         {
-            Reconnect();
-        }
-
-        public void Reconnect()
-        {
-            NetOffice.PowerPointApi.Application pptInstance = NetOffice.PowerPointApi.Application.GetActiveInstance();
-
-            Connect(pptInstance);
-
             // Actions to handle, as defined in EventMessages:
 
             Messenger.Default.Register<powerpointApiSyncSlides>(this, (aa) =>
@@ -38,6 +30,26 @@ namespace PowerSocketServer.Logic
             {
                 SyncState();
             });
+
+
+            Reconnect();
+
+            SyncState();
+            ExportSlides();
+        }
+
+        public void Reconnect()
+        {
+            NetOffice.PowerPointApi.Application pptInstance = NetOffice.PowerPointApi.Application.GetActiveInstance();
+
+            if (pptInstance == null)
+            {
+                // TODO: add polling to wait for POWERPNT to launch
+
+                // cannot use WMI here as that will require adminstrator privilleges which we probably don't got
+            }
+
+            Connect(pptInstance);
         }
 
         private void Connect(NetOffice.PowerPointApi.Application pptInstance)
@@ -53,9 +65,6 @@ namespace PowerSocketServer.Logic
             };
             
             eventListener.RegisterPowerPointInstance(this._pptInstance);
-
-            SyncState();
-            ExportSlides();
         }
 
         // Methods
@@ -422,8 +431,11 @@ namespace PowerSocketServer.Logic
          */
         public void SyncState()
         {
-            //? retry Connect
-            //Connect(); 
+            // retry Connect
+            if (_pptInstance == null)
+            {
+                Reconnect();
+            }
 
             state.Update(_pptInstance);
         }

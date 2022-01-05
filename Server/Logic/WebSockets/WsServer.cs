@@ -98,12 +98,12 @@
             System.Net.IPEndPoint localEndPoint,
             System.Net.IPEndPoint remoteEndPoint)
         {
-            Send(context, "Welcome to the chat room!");
+            //Send(context, "Welcome to the chat room!");
 
-            foreach (var ws in WebSockets.Where(ws => ws != context))
-            {
-                Send(ws, "Someone joined the chat room.");
-            }
+            //foreach (var ws in WebSockets.Where(ws => ws != context))
+            //{
+            //    Send(ws, "Someone joined the chat room.")V;
+            //}
         }
 
         /// <inheritdoc />
@@ -116,7 +116,7 @@
         /// <inheritdoc />
         protected override void OnClientDisconnected(IWebSocketContext context)
         {
-            Broadcast("Someone left the chat room.");
+            //Broadcast("Someone left the chat room.");
         }
     }
 }
