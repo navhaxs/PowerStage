@@ -1,24 +1,41 @@
 // load client.js first!
 elem = id => document.getElementById(id);
 
+// Get a reference to the body element, and create a new image object
+var body = document.querySelector('body');
+var myImage = new Image();
+// Call the function with the URL we want to load, but then chain the
+// promise then() method on to the end of it. This contains two callbacks
+imgLoad('placeholder.png').then(function (response) {
+    // The first runs when the promise resolves, with the request.response
+    // specified within the resolve() method.
+    var imageURL = window.URL.createObjectURL(response);
+    myImage.src = imageURL;
+    body.appendChild(myImage);
+    // The second runs when the promise
+    // is rejected, and logs the Error specified with the reject() method.
+}, function (Error) {
+    console.log(Error);
+});
+
 (status_disconnected = () => elem("status").className = (elem("status").innerText = "Disconnected").toLowerCase())();
 status_badAuth = () => (elem("status").className = "disconnected") && (elem("status").innerText = "Bad password... retrying in 3 seconds");
 status_connecting = () => elem("status").className = (elem("status").innerText = "Connecting").toLowerCase();
 status_connected = () => elem("status").className = (elem("status").innerText = "Connected").toLowerCase();
 
 let cb = {
-  connectFail: function () {
-    status_disconnected();
-    connectFail();
-  },
-  authSuccess: function () {
-    clearTimeout(connectLoop);
-    status_connected();
-  },
-  authFail: function () {
-    status_badAuth();
-    connectFail();
-  },
+    connectFail: function () {
+        status_disconnected();
+        connectFail();
+    },
+    authSuccess: function () {
+        clearTimeout(connectLoop);
+        status_connected();
+    },
+    authFail: function () {
+        status_badAuth();
+        connectFail();
+    },
 }
 
 let connectLoop;
@@ -26,13 +43,13 @@ let shakeLoop;
 
 function connectFail() {
     clearTimeout(connectLoop);
-    connectLoop = setTimeout(function() {
+    connectLoop = setTimeout(function () {
         status_connecting();
         connect(cb);
     }, 3000);
 }
 
-elem("message").addEventListener("keyup", function(event) {
+elem("message").addEventListener("keyup", function (event) {
     event.preventDefault();
     switch (event.keyCode) {
         case 13:
@@ -43,23 +60,23 @@ elem("message").addEventListener("keyup", function(event) {
     }
 });
 
-elem("nextActionButton").addEventListener("click", function() {
+elem("nextActionButton").addEventListener("click", function () {
     nextSlide();
 })
 
-elem("prevActionButton").addEventListener("click", function() {
+elem("prevActionButton").addEventListener("click", function () {
     prevSlide();
 })
 
-elem("send").addEventListener("click", function() {
+elem("send").addEventListener("click", function () {
     let message;
     if (!(message = elem("message").value.trim())) return false;
     stageMessageSend(message);
-    
+
     clearTimeout(shakeLoop)
-    elem("send").className="shake";
-    shakeLoop = setTimeout(()=>elem("send").className="",200);
-    
+    elem("send").className = "shake";
+    shakeLoop = setTimeout(() => elem("send").className = "", 200);
+
 
     var oldMessage = elem("currentMessage");
     var newMessage = oldMessage.cloneNode(true);
@@ -88,7 +105,7 @@ function showPreferences() {
 }
 elem("pref_open").addEventListener("click", showPreferences);
 
-elem("pref_save").addEventListener("click", function() {
+elem("pref_save").addEventListener("click", function () {
     localStorage.setItem("host", elem("pref_addr").value || default_host);
     localStorage.setItem("control_port", elem("pref_control_port").value || default_control_port);
     localStorage.setItem("web_port", elem("pref_web_port").value || default_web_port);

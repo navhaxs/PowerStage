@@ -61,7 +61,6 @@ function updateUI(status) {
 
     const params = new URLSearchParams(location.search);
     var this_web_port = params.get('port') || localStorage.getItem("web_port") || default_web_port;
-    console.log(this_web_port);
     var this_host = localStorage.getItem("host") || default_host;
     var this_slide = "http://" + this_host + ":" + this_web_port + "/slides/slide_" + currentSlideIndex + ".png";
     document.getElementById("slide").src = this_slide;

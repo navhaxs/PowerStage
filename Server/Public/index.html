@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link rel="stylesheet" type="text/css" href="./site.css">
+    <script type="application/javascript" src="./imageUtil.js" defer></script>
     <script type="application/javascript" src="./client.js" defer></script>
     <script type="application/javascript" src="./screenfull.min.js" defer></script>
     <script type="application/javascript" src="./site.js" defer></script>
@@ -21,13 +22,13 @@
     <span id="status"></span>
     <button id="pref_open">Settings</button>
 
-    <img id="slide" src="/placeholder.png" />
-    <img id="nextslide" src="/placeholder.png" />
-    
+    <div id="content">
+      <img id="slide" src="/placeholder.png" />
+      <img id="nextslide" src="/placeholder.png" />
+    </div>
+
     <div id="controls">
-
       <div><span id="currentSlideIndex"></span>/<span id="totalSlidesCount"></span></div>
-
       <div style="display: none">
         <input type="text" id="message" placeholder="Enter message here">
         <button id="send">Send Message<span class="send-button"></span></button>
